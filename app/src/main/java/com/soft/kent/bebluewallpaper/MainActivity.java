@@ -37,8 +37,10 @@ public class MainActivity extends AppCompatActivity
     private void init() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        toolbar.setTitle("");
+        toolbar.setNavigationIcon(R.mipmap.ic_menu2);
+
         tabs = (TabLayout) findViewById(R.id.tabs);
         setViewPager(viewPager);
         tabs.setupWithViewPager(viewPager);

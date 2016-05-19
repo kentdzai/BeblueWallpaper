@@ -5,10 +5,6 @@
     android:background="#0099cc"
     tools:context="com.soft.kent.bebluewallpaper.DetailImageActivity2">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-
     <ImageView
         android:id="@+id/ivDetail"
         android:layout_width="match_parent"
@@ -21,6 +17,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/transparent" />
 
         <LinearLayout
             android:id="@+id/fullscreen_content_controls"
@@ -37,11 +40,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <View
+                    android:id="@+id/viewV"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_alignParentTop="true" />
+
                 <android.support.design.widget.FloatingActionButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/viewV"
                     android:layout_alignParentRight="true"
-                    android:layout_marginBottom="-30dp"
+                    android:layout_marginBottom="-32dp"
+                    android:layout_marginRight="20dp"
                     android:src="@mipmap/ic_favorite" />
 
                 <LinearLayout
@@ -59,7 +70,8 @@
                         android:layout_marginBottom="5dp"
                         android:gravity="left"
                         android:text="Beach Resort Sunset"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -141,8 +153,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
-
-
         </LinearLayout>
     </FrameLayout>
 

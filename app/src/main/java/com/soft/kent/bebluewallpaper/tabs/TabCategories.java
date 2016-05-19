@@ -1,7 +1,6 @@
 package com.soft.kent.bebluewallpaper.tabs;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +19,7 @@ public class TabCategories extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_categories, container, false);
         init(v);
+
         return v;
     }
 

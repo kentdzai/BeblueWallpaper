@@ -16,7 +16,6 @@ public class ChuDeDatabase extends SQLiteOpenHelper{
         super(context, "dbCategories.db", null, 0);
     }
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE TBL_CHUDE(ID INTEGER PRIMARY KEY, TEN_CHUDE TEXT, LINK_CHUDE TEXT, AVATAR INTEGER, COVER INTEGER)");

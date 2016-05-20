@@ -1,10 +1,13 @@
 package com.soft.kent.bebluewallpaper.model;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.soft.kent.bebluewallpaper.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by QuyetChu on 5/19/16.
@@ -13,7 +16,7 @@ public class ChuDeDatabase extends SQLiteOpenHelper {
     public SQLiteDatabase db;
 
     public ChuDeDatabase(Context context) {
-        super(context, "dbCategories.db", null, 0);
+        super(context, "dbCategories.db", null, 1);
     }
 
     @Override
@@ -86,6 +89,23 @@ public class ChuDeDatabase extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO TBL_CHUDE VALUES " +
                 "(" + id + ", '" + name + "', '" + link + "',"
                 + avatar + "," + cover + ")");
+    }
+
+    public ArrayList<ChuDe> queryAllChuDe(){
+        ArrayList<ChuDe> a = new ArrayList<>();
+
+        db = getReadableDatabase();
+        Cursor c = db.query("TBL_CHUDE", null, null, null, null, null, null);
+
+        c.moveToFirst();
+
+        while(c.moveToNext()){
+            a.add(new ChuDe(c.getInt(0),c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
+        }
+
+        c.close();
+
+        return a;
     }
 
     @Override

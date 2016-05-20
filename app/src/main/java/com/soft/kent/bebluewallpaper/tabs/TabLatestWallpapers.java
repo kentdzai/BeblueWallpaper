@@ -71,13 +71,13 @@ public class TabLatestWallpapers extends Fragment {
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                Log.e("haint", "Load More");
+//                Log.e("haint", "Load More");
 
                 //Load more data for reyclerview
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("haint", "Load More 2");
+//                        Log.e("haint", "Load More 2");
                         mAdapter.notifyItemRemoved(listAnh.size());
 //                        mAdapter.setLoaded();
                         new  AsyncGetAllCategory().execute();
@@ -147,7 +147,7 @@ public class TabLatestWallpapers extends Fragment {
     public void getFahrenheit() {
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
         request.addProperty("sUrl",link+index);
-        Log.e("request", request.toString());
+//        Log.e("request", request.toString());
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.dotNet = true;
@@ -158,7 +158,7 @@ public class TabLatestWallpapers extends Fragment {
             //Invole web service
             androidHttpTransport.call(SOAP_ACTION, envelope);
             SoapObject response = (SoapObject) envelope.bodyIn;
-            Log.e("getLinkImaglResponse",response.toString());
+//            Log.e("getLinkImaglResponse",response.toString());
             SoapObject  getLinkImageLandscapeResult= (SoapObject) response.getProperty("getLinkImageLandscapeResult");
             for (int i=0;i<getLinkImageLandscapeResult.getPropertyCount();i++){
                 SoapObject soapObject = (SoapObject)getLinkImageLandscapeResult.getProperty(i);

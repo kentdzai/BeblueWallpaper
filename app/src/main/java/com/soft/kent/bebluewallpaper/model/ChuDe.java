@@ -11,7 +11,7 @@ public class ChuDe {
     int anhDaiDien;
     int anhBia;
 
-    public ChuDe(int id, String tenChuDe, int anhDaiDien, String linkChuDe, int anhBia) {
+    public ChuDe(int id, String tenChuDe,String linkChuDe, int anhDaiDien,  int anhBia) {
         this.id = id;
         this.tenChuDe = tenChuDe;
         this.anhDaiDien = anhDaiDien;

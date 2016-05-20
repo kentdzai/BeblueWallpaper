@@ -1,13 +1,14 @@
 package com.soft.kent.bebluewallpaper.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.R;
@@ -32,14 +33,14 @@ public class ChuDeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public ChuDeAdapter(RecyclerView mRecyclerView, List<ChuDe> mUsers) {
         this.mUsers = mUsers;
-        final GridLayoutManager gridLayoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                totalItemCount = gridLayoutManager.getItemCount();
-                lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
 
                 if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                     if (mOnLoadMoreListener != null) {
@@ -64,7 +65,7 @@ public class ChuDeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context= parent.getContext();
         if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_categories, parent, false);
             return new UserViewHolder(view);
         } else if (viewType == VIEW_TYPE_LOADING) {
             View view = LayoutInflater.from(context).inflate(R.layout.layout_loading_item, parent, false);
@@ -78,7 +79,8 @@ public class ChuDeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (holder instanceof UserViewHolder) {
             ChuDe chuDe = mUsers.get(position);
             UserViewHolder userViewHolder = (UserViewHolder) holder;
-            userViewHolder.imageView.setImageResource(R.mipmap.ic_launcher);
+            userViewHolder.imageView.setImageResource(chuDe.getAnhDaiDien());
+            userViewHolder.tvTenChuDe.setText(chuDe.getTenChuDe());
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);
@@ -96,10 +98,12 @@ public class ChuDeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
+        public TextView tvTenChuDe;
 
         public UserViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.image);
+            imageView = (ImageView) itemView.findViewById(R.id.ivAvatar);
+            tvTenChuDe = (TextView) itemView.findViewById(R.id.tvTenChuDe);
         }
     }
 

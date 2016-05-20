@@ -157,6 +157,7 @@ public class TabDetailImage extends Fragment {
             });
         } catch (Exception e) {
             e.printStackTrace();
+            // vãi nồi
         }
     }
 }

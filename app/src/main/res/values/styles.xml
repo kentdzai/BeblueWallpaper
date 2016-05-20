@@ -13,6 +13,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="AppTheme.DetailImage">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">false</item>
@@ -47,6 +51,5 @@
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@android:color/transparent</item>
-
     </style>
 </resources>

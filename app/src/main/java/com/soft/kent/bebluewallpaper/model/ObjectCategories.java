@@ -3,7 +3,7 @@ package com.soft.kent.bebluewallpaper.model;
 /**
  * Created by QuyetChu on 5/19/16.
  */
-public class ChuDe {
+public class ObjectCategories {
 
     int id;
     String tenChuDe;
@@ -11,7 +11,7 @@ public class ChuDe {
     int anhDaiDien;
     int anhBia;
 
-    public ChuDe(int id, String tenChuDe,String linkChuDe, int anhDaiDien,  int anhBia) {
+    public ObjectCategories(int id, String tenChuDe, String linkChuDe, int anhDaiDien, int anhBia) {
         this.id = id;
         this.tenChuDe = tenChuDe;
         this.anhDaiDien = anhDaiDien;
@@ -61,7 +61,7 @@ public class ChuDe {
 
     @Override
     public String toString() {
-        return "ChuDe{" +
+        return "ObjectCategories{" +
                 "id=" + id +
                 ", tenChuDe='" + tenChuDe + '\'' +
                 ", linkChuDe='" + linkChuDe + '\'' +

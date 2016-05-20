@@ -91,8 +91,8 @@ public class ChuDeDatabase extends SQLiteOpenHelper {
                 + avatar + "," + cover + ")");
     }
 
-    public ArrayList<ChuDe> queryAllChuDe(){
-        ArrayList<ChuDe> a = new ArrayList<>();
+    public ArrayList<ObjectCategories> queryAllChuDe(){
+        ArrayList<ObjectCategories> a = new ArrayList<>();
 
         db = getReadableDatabase();
         Cursor c = db.query("TBL_CHUDE", null, null, null, null, null, null);
@@ -100,7 +100,7 @@ public class ChuDeDatabase extends SQLiteOpenHelper {
         c.moveToFirst();
 
         while(c.moveToNext()){
-            a.add(new ChuDe(c.getInt(0),c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
+            a.add(new ObjectCategories(c.getInt(0),c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
         }
 
         c.close();

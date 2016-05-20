@@ -1,15 +1,13 @@
 package com.soft.kent.bebluewallpaper.model;
 
-import java.util.List;
-
 /**
  * Created by QuyetChu on 5/20/16.
  */
-public class DetailImage {
+public class ObjectDetailImage {
     String imageDisplay;
-    List<ImageLandScape> list;
+    String linkDownload;
 
-    public DetailImage() {
+    public ObjectDetailImage() {
     }
 
     public void setImageDisplay(String imageDisplay) {
@@ -21,19 +19,19 @@ public class DetailImage {
         return imageDisplay;
     }
 
-    public void setList(List<ImageLandScape> list) {
-        this.list = list;
+    public void setLinkDownload(String linkDownload) {
+        this.linkDownload = linkDownload;
     }
 
-    public List<ImageLandScape> getList() {
-        return list;
+    public String getLinkDownload() {
+        return linkDownload;
     }
 
     @Override
     public String toString() {
         return "DetailImage{" +
                 "imageDisplay='" + imageDisplay + '\'' +
-                ", list=" + list +
+                ", linkDownload='" + linkDownload + '\'' +
                 '}';
     }
 }

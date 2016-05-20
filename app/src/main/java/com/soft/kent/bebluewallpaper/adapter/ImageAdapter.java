@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 
 import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.R;
-import com.soft.kent.bebluewallpaper.model.Anh;
+import com.soft.kent.bebluewallpaper.model.ObjectImage;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,19 +19,19 @@ import java.util.List;
 /**
  * Created by QuyetChu on 5/18/16.
  */
-public class AnhAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
     private OnLoadMoreListener mOnLoadMoreListener;
-    List<Anh> mUsers;
+    List<ObjectImage> mUsers;
     private boolean isLoading;
     private int visibleThreshold = 14;
     private int lastVisibleItem, totalItemCount;
 
-    public AnhAdapter(RecyclerView mRecyclerView, List<Anh> mUsers) {
+    public ImageAdapter(RecyclerView mRecyclerView, List<ObjectImage> mUsers) {
         this.mUsers = mUsers;
         final GridLayoutManager gridLayoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -77,9 +77,9 @@ public class AnhAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof UserViewHolder) {
-            Anh anh = mUsers.get(position);
+            ObjectImage objectImage = mUsers.get(position);
             UserViewHolder userViewHolder = (UserViewHolder) holder;
-            Picasso.with(context).load(anh.getImageSmall()).into(userViewHolder.imageView);
+            Picasso.with(context).load(objectImage.getImageSmall()).into(userViewHolder.imageView);
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);

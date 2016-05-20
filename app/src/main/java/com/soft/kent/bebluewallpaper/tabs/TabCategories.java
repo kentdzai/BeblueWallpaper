@@ -13,8 +13,8 @@ import android.widget.Toast;
 import com.soft.kent.bebluewallpaper.DetailCategoriesActivity;
 import com.soft.kent.bebluewallpaper.Listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.R;
-import com.soft.kent.bebluewallpaper.adapter.ChuDeAdapter;
-import com.soft.kent.bebluewallpaper.model.ChuDe;
+import com.soft.kent.bebluewallpaper.adapter.CategoriesAdapter;
+import com.soft.kent.bebluewallpaper.model.ObjectCategories;
 import com.soft.kent.bebluewallpaper.model.ChuDeDatabase;
 
 import java.util.List;
@@ -24,24 +24,24 @@ import java.util.List;
  */
 public class TabCategories extends Fragment {
     RecyclerView rcCategories;
-    List<ChuDe> listChuDe;
+    List<ObjectCategories> listObjectCategories;
     ChuDeDatabase db;
-    ChuDeAdapter chuDeAdapter;
+    CategoriesAdapter categoriesAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_categories, container, false);
         init(v);
         rcCategories.setLayoutManager(new LinearLayoutManager(getContext()));
-        chuDeAdapter = new ChuDeAdapter(rcCategories, listChuDe);
-        rcCategories.setAdapter(chuDeAdapter);
+        categoriesAdapter = new CategoriesAdapter(rcCategories, listObjectCategories);
+        rcCategories.setAdapter(categoriesAdapter);
 
         rcCategories.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        Toast.makeText(getContext(),listChuDe.get(position).getLinkChuDe()+"", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), listObjectCategories.get(position).getLinkChuDe()+"", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), DetailCategoriesActivity.class);
-                        intent.putExtra("link", listChuDe.get(position).getLinkChuDe());
+                        intent.putExtra("link", listObjectCategories.get(position).getLinkChuDe());
                         startActivity(intent);
                     }
                 })
@@ -54,6 +54,6 @@ public class TabCategories extends Fragment {
     private void init(View v) {
         rcCategories = (RecyclerView) v.findViewById(R.id.rcCategories);
         db = new ChuDeDatabase(getContext());
-        listChuDe = db.queryAllChuDe();
+        listObjectCategories = db.queryAllChuDe();
     }
 }

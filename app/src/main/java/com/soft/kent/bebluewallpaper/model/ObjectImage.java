@@ -3,14 +3,12 @@ package com.soft.kent.bebluewallpaper.model;
 /**
  * Created by QuyetChu on 5/18/16.
  */
-public class Anh {
+public class ObjectImage {
+
     private String imageSmall;
     private String linkDetail;
 
-    public Anh(){
-        this.imageSmall = "";
-        this.linkDetail = "";
-    }
+
 
     public void setImageSmall(String imageSmall) {
 

@@ -12,26 +12,26 @@ import android.widget.TextView;
 
 import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.R;
-import com.soft.kent.bebluewallpaper.model.ChuDe;
+import com.soft.kent.bebluewallpaper.model.ObjectCategories;
 
 import java.util.List;
 
 /**
  * Created by QuyetChu on 5/19/16.
  */
-public class ChuDeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
     private OnLoadMoreListener mOnLoadMoreListener;
-    List<ChuDe> mUsers;
+    List<ObjectCategories> mUsers;
     private boolean isLoading;
     private int visibleThreshold = 14;
     private int lastVisibleItem, totalItemCount;
 
-    public ChuDeAdapter(RecyclerView mRecyclerView, List<ChuDe> mUsers) {
+    public CategoriesAdapter(RecyclerView mRecyclerView, List<ObjectCategories> mUsers) {
         this.mUsers = mUsers;
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -77,10 +77,10 @@ public class ChuDeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof UserViewHolder) {
-            ChuDe chuDe = mUsers.get(position);
+            ObjectCategories objectCategories = mUsers.get(position);
             UserViewHolder userViewHolder = (UserViewHolder) holder;
-            userViewHolder.imageView.setImageResource(chuDe.getAnhDaiDien());
-            userViewHolder.tvTenChuDe.setText(chuDe.getTenChuDe());
+            userViewHolder.imageView.setImageResource(objectCategories.getAnhDaiDien());
+            userViewHolder.tvTenChuDe.setText(objectCategories.getTenChuDe());
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);

@@ -36,5 +36,7 @@ public class Anh {
                 ", linkDetail='" + linkDetail + '\'' +
                 '}';
     }
+
+
 }
 

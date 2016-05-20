@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.squareup.picasso.Picasso;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
@@ -68,6 +70,7 @@ public class TabDetailImage extends Fragment {
 //        toolbar.setNavigationIcon(R.mipmap.ic_backarrow);
 //        toolbar.setOverflowIcon(getResources().getDrawable(R.mipmap.ic_menu2));
 
+        arrrObbjectDetailImage = new ArrayList<>();
         ivDetail = (ImageView) v.findViewById(R.id.ivDetail);
         fabFavorite = (FloatingActionButton) v.findViewById(R.id.fabFavorite);
         tvTitleDetailImage = (TextView) v.findViewById(R.id.tvTitleDetailImage);
@@ -98,15 +101,20 @@ public class TabDetailImage extends Fragment {
 
         @Override
         protected void onPostExecute(Void result) {
+
         }
 
         @Override
         protected void onPreExecute() {
+
+
         }
 
         @Override
         protected void onProgressUpdate(Void... values) {
+
         }
+
     }
 
     public void getDetailsImage() {

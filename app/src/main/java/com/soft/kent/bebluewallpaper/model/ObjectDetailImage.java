@@ -7,9 +7,6 @@ public class ObjectDetailImage {
     String imageDisplay;
     String linkDownload;
 
-    public ObjectDetailImage() {
-    }
-
     public void setImageDisplay(String imageDisplay) {
         this.imageDisplay = imageDisplay;
     }

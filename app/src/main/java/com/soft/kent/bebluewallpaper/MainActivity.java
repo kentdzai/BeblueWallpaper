@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.soft.kent.bebluewallpaper.adapter.AdapterViewPager;
 import com.soft.kent.bebluewallpaper.tabs.TabCategories;
 import com.soft.kent.bebluewallpaper.tabs.TabLatestWallpapers;
 import com.soft.kent.bebluewallpaper.tabs.TabTopMostViewed;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setViewPager(ViewPager viewPager) {
-        AdapterActivity adapter = new AdapterActivity(getSupportFragmentManager());
+        AdapterViewPager adapter = new AdapterViewPager(getSupportFragmentManager());
         adapter.addTab(new TabCategories(), "Categories");
         adapter.addTab(new TabLatestWallpapers(), "Latest Wallpapers");
         adapter.addTab(new TabTopMostViewed(), "Top Most Viewed");
@@ -78,36 +79,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    class AdapterActivity extends FragmentPagerAdapter {
-        ArrayList<Fragment> arrF = new ArrayList<>();
-        ArrayList<String> arrT = new ArrayList<>();
-
-        public AdapterActivity(FragmentManager fm) {
-            super(fm);
-        }
-
-
-        @Override
-        public Fragment getItem(int position) {
-            return arrF.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return arrF.size();
-        }
-
-        public void addTab(Fragment fragment, String title) {
-            arrF.add(fragment);
-            arrT.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return arrT.get(position);
-
-        }
-    }
 
     @Override
     public void onBackPressed() {

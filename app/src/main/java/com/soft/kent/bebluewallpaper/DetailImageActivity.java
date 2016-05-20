@@ -5,9 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -18,12 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.soft.kent.bebluewallpaper.adapter.AdapterViewPager;
 import com.soft.kent.bebluewallpaper.model.DetailImage;
 import com.soft.kent.bebluewallpaper.model.ImageLandScape;
-import com.soft.kent.bebluewallpaper.tabs.TabCategories;
-import com.soft.kent.bebluewallpaper.tabs.TabLatestWallpapers;
-import com.soft.kent.bebluewallpaper.tabs.TabTopMostViewed;
+import com.squareup.picasso.Picasso;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -54,50 +49,35 @@ public class DetailImageActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_image);
+        setContentView(R.layout.activity_detail_image);
         init();
-//        new AsyncGetAllCategory().execute();
+        new AsyncGetAllCategory().execute();
+
 //        Picasso.with(this).load(listDetailImage.get(0).getImageDisplay()).into(ivDetail);
     }
 
-    ViewPager viewPager;
-
     private void init() {
-//        link = getIntent().getStringExtra("linkDetail");
-
-//        toolbar = (Toolbar) findViewById(R.id.toolbar1);
-//        setSupportActionBar(toolbar);
+        link = getIntent().getStringExtra("linkDetail");
+        toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        toolbar.setNavigationIcon(R.mipmap.ic_backarrow);
-//        toolbar.setOverflowIcon(getResources().getDrawable(R.mipmap.ic_menu2));
 
-        viewPager = (ViewPager) findViewById(R.id.vPAllImage);
-        setViewPager(viewPager);
-
-//        ivDetail = (ImageView) findViewById(R.id.ivDetail);
-//        fabFavorite = (FloatingActionButton) findViewById(R.id.fabFavorite);
-//        tvTitleDetailImage = (TextView) findViewById(R.id.tvTitleDetailImage);
-//        tvCountViewDetailImage = (TextView) findViewById(R.id.tvCountViewDetailImage);
-//        btnDownloadImage = (Button) findViewById(R.id.btnDownloadImage);
-//        btnSetWallpaper = (Button) findViewById(R.id.btnSetWallpaper);
-//        tvAuthorName = (TextView) findViewById(R.id.tvAuthorName);
+        toolbar.setNavigationIcon(R.mipmap.ic_backarrow);
+        toolbar.setOverflowIcon(getResources().getDrawable(R.mipmap.ic_menu2));
+        ivDetail = (ImageView) findViewById(R.id.ivDetail);
+        fabFavorite = (FloatingActionButton) findViewById(R.id.fabFavorite);
+        tvTitleDetailImage = (TextView) findViewById(R.id.tvTitleDetailImage);
+        tvCountViewDetailImage = (TextView) findViewById(R.id.tvCountViewDetailImage);
+        btnDownloadImage = (Button) findViewById(R.id.btnDownloadImage);
+        btnSetWallpaper = (Button) findViewById(R.id.btnSetWallpaper);
+        tvAuthorName = (TextView) findViewById(R.id.tvAuthorName);
 //        rcRelatesDetailImage = (RecyclerView) findViewById(R.id.rcRelatesDetailImage);
 
-//        fabFavorite.setOnClickListener(this);
-//        btnDownloadImage.setOnClickListener(this);
-//        btnSetWallpaper.setOnClickListener(this);
+        fabFavorite.setOnClickListener(this);
+        btnDownloadImage.setOnClickListener(this);
+        btnSetWallpaper.setOnClickListener(this);
     }
-
-    public void setViewPager(ViewPager viewPager) {
-        AdapterViewPager adapter = new AdapterViewPager(getSupportFragmentManager());
-        adapter.addTab(new TabCategories(), "Categories");
-        adapter.addTab(new TabLatestWallpapers(), "Latest Wallpapers");
-        adapter.addTab(new TabTopMostViewed(), "Top Most Viewed");
-        viewPager.setAdapter(adapter);
-        viewPager.setOnPageChangeListener(this);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,23 +102,8 @@ public class DetailImageActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void thongBao(String msg, View v) {
-        Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+        Snackbar.make(  v, msg, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
     }
 
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
@@ -173,7 +138,7 @@ public class DetailImageActivity extends AppCompatActivity implements View.OnCli
 
     public void getFahrenheit() {
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-        request.addProperty("sUrl", link);
+        request.addProperty("sUrl",link);
 //        Log.e("request", request.toString());
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
@@ -185,18 +150,18 @@ public class DetailImageActivity extends AppCompatActivity implements View.OnCli
             //Invole web service
             androidHttpTransport.call(SOAP_ACTION, envelope);
             SoapObject response = (SoapObject) envelope.bodyIn;
-            Log.e("getLinkImaglResponse", response.toString());
-            SoapObject getLinkImageLandscapeResult = (SoapObject) response.getProperty("getLinkImageLandscapeDetailResult");
+            Log.e("getLinkImaglResponse",response.toString());
+            SoapObject  getLinkImageLandscapeResult= (SoapObject) response.getProperty("getLinkImageLandscapeDetailResult");
 
-            for (int i = 0; i < getLinkImageLandscapeResult.getPropertyCount(); i++) {
-                SoapObject soapObject = (SoapObject) getLinkImageLandscapeResult.getProperty(i);
-                Log.e("a " + i, soapObject.toString());
+            for (int i=0;i<getLinkImageLandscapeResult.getPropertyCount();i++){
+                SoapObject soapObject = (SoapObject)getLinkImageLandscapeResult.getProperty(i);
+                Log.e("a "+i,soapObject.toString());
                 DetailImage detailImage = new DetailImage();
                 detailImage.setImageDisplay(soapObject.getProperty("ImageDisplay").toString());
-                SoapObject getDownloadLinks = (SoapObject) response.getProperty("ImageLandScape");
+                SoapObject  getDownloadLinks= (SoapObject) response.getProperty("ImageLandScape");
 
                 for (int n = 0; n < getDownloadLinks.getPropertyCount(); n++) {
-                    SoapObject soapObject1 = (SoapObject) getDownloadLinks.getProperty(i);
+                    SoapObject soapObject1 = (SoapObject)getDownloadLinks.getProperty(i);
                     ImageLandScape imageLandScape = new ImageLandScape();
                     imageLandScape.setImageResolution(soapObject1.getProperty("ImageResolution").toString());
                     imageLandScape.setLinkDown(soapObject1.getProperty("LinkDown").toString());
@@ -207,6 +172,7 @@ public class DetailImageActivity extends AppCompatActivity implements View.OnCli
                 listDetailImage.add(detailImage);
 
             }
+
 
 
         } catch (Exception e) {

@@ -7,8 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -95,7 +93,9 @@ public class TabLatestWallpapers extends Fragment {
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        Toast.makeText(getContext(),listAnh.get(position).getLinkDetail()+"", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getActivity(), DetailImageActivity.class);
+                        intent.putExtra("linkDetail", listAnh.get(position).getLinkDetail());
+                        startActivity(intent);
                     }
                 })
         );

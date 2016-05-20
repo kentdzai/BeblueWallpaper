@@ -22,9 +22,7 @@
                 <ImageView
                     android:id="@+id/ivDetail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/cover" />
+                    android:layout_height="wrap_content"/>
 
                 <include layout="@layout/content_detail_image" />
             </LinearLayout>

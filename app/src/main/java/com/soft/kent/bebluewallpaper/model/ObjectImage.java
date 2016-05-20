@@ -9,7 +9,6 @@ public class ObjectImage {
     private String linkDetail;
 
 
-
     public void setImageSmall(String imageSmall) {
 
         this.imageSmall = imageSmall;

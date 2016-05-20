@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.model.ObjectDetailImage;
@@ -23,6 +24,8 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.ArrayList;
+
 @SuppressLint("ValidFragment")
 public class TabDetailImage extends Fragment {
 
@@ -30,8 +33,8 @@ public class TabDetailImage extends Fragment {
     private final String URL = "http://api.ixinh.net/services.asmx?op=getLinkImageLandscapeDetail";
     private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscapeDetail";
     private final String METHOD_NAME = "getLinkImageLandscapeDetail";
-    private String link = "http://www.hdwallpapers.in/assetto_corsa-wallpapers.html";
-    ObjectDetailImage objectDetailImage;
+    private String link = "http://www.hdwallpapers.in/michelangelo_tmnt_out_of_the_shadows-wallpapers.html";
+    ArrayList<ObjectDetailImage> arrrObbjectDetailImage;
     Toolbar toolbar;
     ImageView ivDetail;
     FloatingActionButton fabFavorite;
@@ -40,9 +43,9 @@ public class TabDetailImage extends Fragment {
     Button btnDownloadImage;
     Button btnSetWallpaper;
     TextView tvAuthorName;
-
+String a;
     public TabDetailImage(String link) {
-//        this.link = link;
+        this.a = link;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class TabDetailImage extends Fragment {
         init(v);
         new AsyncGetAllCategory().execute();
         showImage();
+        Toast.makeText(getActivity(), ""+link, Toast.LENGTH_SHORT).show();
         return v;
     }
 
@@ -63,7 +67,7 @@ public class TabDetailImage extends Fragment {
 //        toolbar.setNavigationIcon(R.mipmap.ic_backarrow);
 //        toolbar.setOverflowIcon(getResources().getDrawable(R.mipmap.ic_menu2));
 
-        objectDetailImage = new ObjectDetailImage();
+        arrrObbjectDetailImage = new ArrayList<>();
         ivDetail = (ImageView) v.findViewById(R.id.ivDetail);
         fabFavorite = (FloatingActionButton) v.findViewById(R.id.fabFavorite);
         tvTitleDetailImage = (TextView) v.findViewById(R.id.tvTitleDetailImage);
@@ -76,7 +80,7 @@ public class TabDetailImage extends Fragment {
 
     public void showImage() {
         if (link != null) {
-            Picasso.with(getActivity()).load(objectDetailImage.getImageDisplay()).centerCrop().into(ivDetail);
+            Picasso.with(getActivity()).load(arrrObbjectDetailImage.get(0).getImageDisplay()).into(ivDetail);
         }
 
     }
@@ -124,10 +128,13 @@ public class TabDetailImage extends Fragment {
             for (int i = 0;i < getLinkImageLandscapeResult.getPropertyCount(); i++){
                 SoapObject soapObject = (SoapObject)getLinkImageLandscapeResult.getProperty(i);
                 Log.e("STT: "+i,soapObject.toString());
-
-                objectDetailImage.setImageDisplay(soapObject.getProperty("ImageResolution").toString());
+                ObjectDetailImage objectDetailImage = new ObjectDetailImage();
+                objectDetailImage.setImageDisplay(soapObject.getProperty("ImageDisplay").toString());
                 objectDetailImage.setLinkDownload(soapObject.getProperty("LinkDown").toString());
+                arrrObbjectDetailImage.add(objectDetailImage);
             }
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

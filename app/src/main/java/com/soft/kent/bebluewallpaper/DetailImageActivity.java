@@ -29,7 +29,7 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     public void setViewPager(ViewPager viewPager) {
         AdapterViewPager adapter = new AdapterViewPager(getSupportFragmentManager());
         for (int i = 0; i < 5; i++) {
-            adapter.addTab(new TabDetailImage(""),"");
+            adapter.addTab(new TabDetailImage("http://www.hdwallpapers.in/walls/spectacular-wide.jpg"),"");
         }
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(this);

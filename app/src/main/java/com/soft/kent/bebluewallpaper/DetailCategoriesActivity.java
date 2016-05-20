@@ -94,7 +94,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
 
             imageAdapter.notifyDataSetChanged();
 
-            Toast.makeText(getBaseContext(), "Load trang: "+index, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getBaseContext(), "Load trang: "+index, Toast.LENGTH_SHORT).show();
 
 
             imageAdapter.setLoaded();
@@ -132,7 +132,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
 
             for (int i = 0;i < getLinkImageLandscapeResult.getPropertyCount(); i++){
                 SoapObject soapObject = (SoapObject)getLinkImageLandscapeResult.getProperty(i);
-                Log.e("STT: "+i,soapObject.toString());
+//                Log.e("STT: "+i,soapObject.toString());
                 ObjectImage objectImage = new ObjectImage();
                 objectImage.setImageSmall(soapObject.getProperty("ImageSmall").toString());
                 objectImage.setLinkDetail(soapObject.getProperty("LinkDetail").toString());

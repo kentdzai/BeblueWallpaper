@@ -1,16 +1,35 @@
 package com.soft.kent.bebluewallpaper;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
 import com.soft.kent.bebluewallpaper.adapter.AdapterViewPager;
+import com.soft.kent.bebluewallpaper.model.ObjectImage;
 import com.soft.kent.bebluewallpaper.tabs.TabDetailImage;
 
-public class DetailImageActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.ArrayList;
+
+public class DetailImageActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+    private final String NAME_SPACE = "http://tempuri.org/";
+    private final String URL = "http://api.ixinh.net/services.asmx?op=getLinkImageLandscape";
+    private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscape";
+    private final String METHOD_NAME = "getLinkImageLandscape";
+    private static String link = "http://www.hdwallpapers.in/latest_wallpapers/page/";
+
+    private ArrayList<ObjectImage> arrI;
+    private ProgressDialog dialog;
+    private int index;
     ViewPager viewpager;
 
     @Override
@@ -22,15 +41,17 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
 
     private void init() {
         viewpager = (ViewPager) findViewById(R.id.vPAllImage);
-        setViewPager(viewpager);
-
+        new AsyncGetAllCategory().execute();
     }
 
     public void setViewPager(ViewPager viewPager) {
         AdapterViewPager adapter = new AdapterViewPager(getSupportFragmentManager());
-        for (int i = 0; i < 5; i++) {
-            adapter.addTab(new TabDetailImage(""),"");
+        if (arrI != null) {
+            for (int i = 0; i < arrI.size(); i++) {
+                adapter.addTab(new TabDetailImage(arrI.get(i).getLinkDetail()), "");
+            }
         }
+
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(this);
     }
@@ -59,5 +80,67 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     }
 
 
+    private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... params) {
+            getCategories();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (index == 1) {
+                dialog.dismiss();
+            }
+            index++;
+            setViewPager(viewpager);
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            if (index == 1) {
+                dialog.show();
+            }
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+        }
+
+    }
+
+    public void getCategories() {
+        arrI = new ArrayList<>();
+        SoapObject request = new SoapObject(NAME_SPACE, METHOD_NAME);
+        request.addProperty("sUrl", link + index);
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(request);
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+
+        try {
+            androidHttpTransport.call(SOAP_ACTION, envelope);
+            SoapObject response = (SoapObject) envelope.bodyIn;
+            SoapObject getLinkImageLandscapeResult = (SoapObject)
+                    response.getProperty("getLinkImageLandscapeResult");
+
+            for (int i = 0; i < getLinkImageLandscapeResult.getPropertyCount(); i++) {
+                SoapObject soapObject = (SoapObject) getLinkImageLandscapeResult.getProperty(i);
+                Log.e("STT: " + i, soapObject.toString());
+                ObjectImage objectImage = new ObjectImage();
+                objectImage.setImageSmall(soapObject.getProperty("ImageSmall").toString());
+                objectImage.setLinkDetail(soapObject.getProperty("LinkDetail").toString());
+                arrI.add(objectImage);
+            }
+            MyLog.e(arrI.get(0).getImageSmall());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

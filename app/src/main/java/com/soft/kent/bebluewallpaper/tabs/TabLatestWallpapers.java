@@ -106,7 +106,7 @@ public class TabLatestWallpapers extends Fragment {
 
             imageAdapter.notifyDataSetChanged();
 
-            Toast.makeText(getActivity(), "Load trang: "+index, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "Load trang: "+index, Toast.LENGTH_SHORT).show();
 
             if(index == 1) {
                 dialog.dismiss();
@@ -146,7 +146,8 @@ public class TabLatestWallpapers extends Fragment {
         try {
             androidHttpTransport.call(SOAP_ACTION, envelope);
             SoapObject response = (SoapObject) envelope.bodyIn;
-            SoapObject  getLinkImageLandscapeResult= (SoapObject) response.getProperty("getLinkImageLandscapeResult");
+            SoapObject  getLinkImageLandscapeResult= (SoapObject)
+                    response.getProperty("getLinkImageLandscapeResult");
 
             for (int i = 0;i < getLinkImageLandscapeResult.getPropertyCount(); i++){
                 SoapObject soapObject = (SoapObject)getLinkImageLandscapeResult.getProperty(i);

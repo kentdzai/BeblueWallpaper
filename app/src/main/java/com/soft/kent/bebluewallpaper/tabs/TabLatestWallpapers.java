@@ -63,7 +63,6 @@ public class TabLatestWallpapers extends Fragment {
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
 
-
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdapter = new AnhAdapter(recyclerView, listAnh);
         recyclerView.setAdapter(mAdapter);

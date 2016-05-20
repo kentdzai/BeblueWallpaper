@@ -30,7 +30,6 @@ public class DetailImageActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_image);
-
         init();
     }
 
@@ -48,7 +47,7 @@ public class DetailImageActivity extends AppCompatActivity implements View.OnCli
         btnDownloadImage = (Button) findViewById(R.id.btnDownloadImage);
         btnSetWallpaper = (Button) findViewById(R.id.btnSetWallpaper);
         tvAuthorName = (TextView) findViewById(R.id.tvAuthorName);
-        rcRelatesDetailImage = (RecyclerView) findViewById(R.id.rcRelatesDetailImage);
+//        rcRelatesDetailImage = (RecyclerView) findViewById(R.id.rcRelatesDetailImage);
 
         fabFavorite.setOnClickListener(this);
         btnDownloadImage.setOnClickListener(this);

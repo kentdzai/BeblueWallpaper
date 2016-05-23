@@ -48,6 +48,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar.setBackgroundResource(R.drawable.cover);
         ImageView cover = (ImageView) findViewById(R.id.cover);
         cover.setImageResource(R.mipmap.cover);
         getSupportActionBar().setTitle(ten);

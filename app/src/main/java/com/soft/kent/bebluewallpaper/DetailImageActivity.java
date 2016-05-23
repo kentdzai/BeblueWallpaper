@@ -35,6 +35,7 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     private ArrayList<ObjectImage> arrI;
     private ProgressDialog dialog;
     private int index;
+    ViewPager viewpager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     public void setViewPager(ViewPager viewPager) {
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(this);
+        viewPager.setCurrentItem(bundle.getInt("position"),true);
     }
 
     int i = 0;
@@ -124,6 +126,7 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
             SoapObject response = (SoapObject) envelope.bodyIn;
             SoapObject getLinkImageLandscapeResult = (SoapObject)
                     response.getProperty("getLinkImageLandscapeResult");
+
             for (int i = 0; i < getLinkImageLandscapeResult.getPropertyCount(); i++) {
                 SoapObject soapObject = (SoapObject) getLinkImageLandscapeResult.getProperty(i);
                 String ImageSmall = soapObject.getProperty("ImageSmall").toString();
@@ -132,6 +135,8 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
                 adapter.addTab(new TabDetailImage(LinkDetail), "");
                 adapter.notifyDataSetChanged();
             }
+            MyLog.e(arrI.get(0).getImageSmall());
+
         } catch (Exception e) {
             e.printStackTrace();
         }

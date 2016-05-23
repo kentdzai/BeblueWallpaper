@@ -41,7 +41,10 @@ public class TabCategories extends Fragment {
                     @Override public void onItemClick(View view, int position) {
                         Toast.makeText(getContext(), listObjectCategories.get(position).getLinkChuDe()+"", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), DetailCategoriesActivity.class);
-                        intent.putExtra("link", listObjectCategories.get(position).getLinkChuDe());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("link", listObjectCategories.get(position).getLinkChuDe());
+                        bundle.putString("ten", listObjectCategories.get(position).getTenChuDe());
+                        intent.putExtra("data", bundle);
                         startActivity(intent);
                     }
                 })

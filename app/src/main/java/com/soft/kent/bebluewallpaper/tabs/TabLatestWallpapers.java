@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.soft.kent.bebluewallpaper.DetailImageActivity;
 import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
@@ -85,8 +84,11 @@ public class TabLatestWallpapers extends Fragment {
         rvAnh.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("linkDetail", arrI.get(position).getLinkDetail());
+                        bundle.putInt("position", position);
                         Intent intent = new Intent(getActivity(), DetailImageActivity.class);
-                        intent.putExtra("linkDetail", arrI.get(position).getLinkDetail());
+                        intent.putExtra("data", bundle);
                         startActivity(intent);
                     }
                 })

@@ -44,8 +44,21 @@ public class DetailCategoriesActivity extends AppCompatActivity {
     }
 
     public void init(){
+        Bundle bundle = getIntent().getBundleExtra("data");
+        ten = bundle.getString("ten");
+        link = bundle.getString("link");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ImageView cover = (ImageView) findViewById(R.id.cover);
+        cover.setImageResource(R.drawable.cover);
+        getSupportActionBar().setTitle(ten);
+//        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
+//        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        getSupportActionBar().setCustomView(R.layout.custom_title);
+//        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.naruto_hinata));
         index = 1;
-        link = getIntent().getStringExtra("link");
         rvAnh = (RecyclerView) findViewById(R.id.recycler_view_detail_categories);
         rvAnh.setLayoutManager(new GridLayoutManager(this, 2));
 
@@ -68,16 +81,15 @@ public class DetailCategoriesActivity extends AppCompatActivity {
 
         });
 
-        rvAnh.addOnItemTouchListener(
-                new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(getBaseContext(), DetailImageActivity.class);
-                        intent.putExtra("linkDetail", arrI.get(position).getLinkDetail());
-                        startActivity(intent);
-                    }
-                })
-        );
+//        rvAnh.addOnItemTouchListener(
+//                new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
+//                    @Override public void onItemClick(View view, int position) {
+//                        Intent intent = new Intent(getBaseContext(), DetailImageActivity.class);
+//                        intent.putExtra("linkDetail", arrI.get(position).getLinkDetail());
+//                        startActivity(intent);
+//                    }
+//                })
+//        );
     }
 
 
@@ -95,8 +107,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
 
             imageAdapter.notifyDataSetChanged();
 
-//            Toast.makeText(getBaseContext(), "Load trang: "+index, Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(getBaseContext(), "Load trang: "+index, Toast.LENGTH_SHORT).show();
 
             imageAdapter.setLoaded();
             index++;

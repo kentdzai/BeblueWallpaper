@@ -36,7 +36,6 @@ public class TabDetailImage extends Fragment {
     private final String URL = "http://api.ixinh.net/services.asmx?op=getLinkImageLandscapeDetail";
     private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscapeDetail";
     private final String METHOD_NAME = "getLinkImageLandscapeDetail";
-    private String link = "http://www.hdwallpapers.in/michelangelo_tmnt_out_of_the_shadows-wallpapers.html";
     ArrayList<ObjectDetailImage> arrrObbjectDetailImage;
     Toolbar toolbar;
     ImageView ivDetail;
@@ -46,12 +45,12 @@ public class TabDetailImage extends Fragment {
     Button btnDownloadImage;
     Button btnSetWallpaper;
     TextView tvAuthorName;
-    String a;
+    String link;
     Handler handler;
     CoordinatorLayout LayoutDetailImage;
 
-    public TabDetailImage(String link) {
-        this.a = link;
+    public TabDetailImage(String link, int size) {
+        this.link = link;
     }
 
     @Override
@@ -82,17 +81,8 @@ public class TabDetailImage extends Fragment {
         arrrObbjectDetailImage = new ArrayList<>();
         LayoutDetailImage.setVisibility(View.GONE);
         new GetAllDetailImageTask().execute();
-//        showImage();
     }
 
-    public void showImage() {
-        Picasso.with(getContext()).load("http://www.hdwallpapers.in/walls/michelangelo_tmnt_out_of_the_shadows-wide.jpg")
-                .resize(600, 800).into(ivDetail);
-//        if (link != null) {
-//
-//        }
-
-    }
 
     private class GetAllDetailImageTask extends AsyncTask<String, Void, Void> {
         @Override
@@ -121,7 +111,7 @@ public class TabDetailImage extends Fragment {
 
     public void getDetailsImage() {
         SoapObject request = new SoapObject(NAME_SPACE, METHOD_NAME);
-        request.addProperty("sUrl", a);
+        request.addProperty("sUrl", link);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.dotNet = true;

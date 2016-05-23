@@ -151,11 +151,9 @@ public class TabLatestWallpapers extends Fragment {
 
             for (int i = 0;i < getLinkImageLandscapeResult.getPropertyCount(); i++){
                 SoapObject soapObject = (SoapObject)getLinkImageLandscapeResult.getProperty(i);
-                Log.e("STT: "+i,soapObject.toString());
-                ObjectImage objectImage = new ObjectImage();
-                objectImage.setImageSmall(soapObject.getProperty("ImageSmall").toString());
-                objectImage.setLinkDetail(soapObject.getProperty("LinkDetail").toString());
-                arrI.add(objectImage);
+                String ImageSmall = soapObject.getProperty("ImageSmall").toString();
+                String LinkDetail = soapObject.getProperty("LinkDetail").toString();
+                arrI.add(new ObjectImage(ImageSmall, LinkDetail));
             }
 
         } catch (Exception e) {

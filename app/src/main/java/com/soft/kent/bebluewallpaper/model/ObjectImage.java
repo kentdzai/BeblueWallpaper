@@ -8,6 +8,10 @@ public class ObjectImage {
     private String imageSmall;
     private String linkDetail;
 
+    public ObjectImage(String imageSmall, String linkDetail) {
+        this.imageSmall = imageSmall;
+        this.linkDetail = linkDetail;
+    }
 
     public void setImageSmall(String imageSmall) {
 

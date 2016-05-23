@@ -1,13 +1,14 @@
 package com.soft.kent.bebluewallpaper.tabs;
 
 import android.annotation.SuppressLint;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,6 @@ import com.squareup.picasso.Picasso;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
@@ -48,6 +48,7 @@ public class TabDetailImage extends Fragment {
     TextView tvAuthorName;
     String a;
     Handler handler;
+    CoordinatorLayout LayoutDetailImage;
 
     public TabDetailImage(String link) {
         this.a = link;
@@ -62,7 +63,7 @@ public class TabDetailImage extends Fragment {
     }
 
     private void init(View v) {
-
+        LayoutDetailImage = (CoordinatorLayout) v.findViewById(R.id.LayoutDetailImage);
 //        toolbar = (Toolbar) v.findViewById(R.id.toolbar1);
 //        getActivity().setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -79,6 +80,7 @@ public class TabDetailImage extends Fragment {
         btnSetWallpaper = (Button) v.findViewById(R.id.btnSetWallpaper);
         tvAuthorName = (TextView) v.findViewById(R.id.tvAuthorName);
         arrrObbjectDetailImage = new ArrayList<>();
+        LayoutDetailImage.setVisibility(View.GONE);
         new GetAllDetailImageTask().execute();
 //        showImage();
     }
@@ -137,27 +139,44 @@ public class TabDetailImage extends Fragment {
             final String ImageDisplay = getLinkImageLandscapeDetailResult.getPropertyAsString("ImageDisplay");
             String ImageResolution = ImageLandScape.getPropertyAsString("ImageResolution");
             String LinkDown = ImageLandScape.getPropertyAsString("LinkDown");
-
             SoapObject ImageRelate = (SoapObject)
                     getLinkImageLandscapeDetailResult.getProperty("ImageRelate");
             SoapObject ImageLandscapeThumb = (SoapObject)
                     ImageRelate.getProperty("ImageLandscapeThumb");
             String ImageSmall = ImageLandscapeThumb.getPropertyAsString("ImageSmall");
             String LinkDetail = ImageLandscapeThumb.getPropertyAsString("LinkDetail");
-            MyLog.e("ImageSmall: " + ImageSmall);
-            MyLog.e("LinkDetail: " + LinkDetail);
-            MyLog.e("ImageDisplay: " + ImageDisplay);
-            MyLog.e("ImageResolution: " + ImageResolution);
-            MyLog.e("LinkDown: " + LinkDown);
+            SoapObject Tags = (SoapObject)
+                    getLinkImageLandscapeDetailResult.getProperty("Tags");
+            String tag1 = Tags.getPropertyAsString(0);
+            String tag2 = Tags.getPropertyAsString(1);
+            final String WallpaperName =
+                    getLinkImageLandscapeDetailResult.getPropertyAsString("WallpaperName");
+            String CatetoryName =
+                    getLinkImageLandscapeDetailResult.getPropertyAsString("CatetoryName");
+            final int Download =
+                    Integer.parseInt(getLinkImageLandscapeDetailResult.getPropertyAsString("Download"));
+            String DateTime =
+                    getLinkImageLandscapeDetailResult.getPropertyAsString("DateTime");
+//            MyLog.e("ImageSmall: " + ImageSmall);
+//            MyLog.e("LinkDetail: " + LinkDetail);
+//            MyLog.e("ImageDisplay: " + ImageDisplay);
+//            MyLog.e("ImageResolution: " + ImageResolution);
+//            MyLog.e("LinkDown: " + LinkDown);
+            MyLog.e("CatetoryName: " + CatetoryName);
+            MyLog.e("DateTime: " + DateTime);
+
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Picasso.with(getContext()).load(ImageDisplay).resize(600, 800).into(ivDetail);
+                    Picasso.with(getContext()).load(ImageDisplay).into(ivDetail);
+                    LayoutDetailImage.setVisibility(View.VISIBLE);
+                    tvTitleDetailImage.setText(WallpaperName);
+                    tvCountViewDetailImage.setText(String.valueOf(Download));
+//                    MyLog.e("Tab: " + ImageDisplay);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
-            // vãi nồi
         }
     }
 }

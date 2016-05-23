@@ -1,5 +1,6 @@
 package com.soft.kent.bebluewallpaper;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,9 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
+import com.soft.kent.bebluewallpaper.Listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 
@@ -65,15 +68,16 @@ public class DetailCategoriesActivity extends AppCompatActivity {
 
         });
 
-//        rvAnh.addOnItemTouchListener(
-//                new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
-//                    @Override public void onItemClick(View view, int position) {
-//                        Intent intent = new Intent(getBaseContext(), DetailImageActivity.class);
-//                        intent.putExtra("linkDetail", arrI.get(position).getLinkDetail());
-//                        startActivity(intent);
-//                    }
-//                })
-//        );
+        rvAnh.addOnItemTouchListener(
+                new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(getBaseContext(), DetailImageActivity.class);
+                        intent.putExtra("linkDetail", arrI.get(position).getLinkDetail());
+                        startActivity(intent);
+                    }
+                })
+        );
     }
 
 
@@ -130,12 +134,10 @@ public class DetailCategoriesActivity extends AppCompatActivity {
             for (int i = 0;i < getLinkImageLandscapeResult.getPropertyCount(); i++){
                 SoapObject soapObject = (SoapObject)getLinkImageLandscapeResult.getProperty(i);
 //                Log.e("STT: "+i,soapObject.toString());
-                ObjectImage objectImage = new ObjectImage();
-                objectImage.setImageSmall(soapObject.getProperty("ImageSmall").toString());
-                objectImage.setLinkDetail(soapObject.getProperty("LinkDetail").toString());
-                arrI.add(objectImage);
+                String ImageSmall = soapObject.getProperty("ImageSmall").toString();
+                String LinkDetail = soapObject.getProperty("LinkDetail").toString();
+                arrI.add(new ObjectImage(ImageSmall, LinkDetail));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

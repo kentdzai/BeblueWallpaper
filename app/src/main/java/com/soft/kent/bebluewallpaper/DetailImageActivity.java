@@ -46,14 +46,16 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
 
     public void setViewPager(ViewPager viewPager) {
         AdapterViewPager adapter = new AdapterViewPager(getSupportFragmentManager());
+        Bundle bundle = getIntent().getBundleExtra("data");
         if (arrI != null) {
             for (int i = 0; i < arrI.size(); i++) {
-                adapter.addTab(new TabDetailImage(arrI.get(i).getLinkDetail()), "");
+                adapter.addTab(new TabDetailImage(arrI.get(i).getLinkDetail(), arrI.size() - 2), "");
             }
         }
 
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(this);
+        viewPager.setCurrentItem(bundle.getInt("position"),true);
     }
 
     @Override

@@ -27,9 +27,9 @@ public class ChuDeDatabase extends SQLiteOpenHelper {
 
     public void insertDefaultCategories(SQLiteDatabase db) {
         insertDefaults(db, 1, "3D & Abstract",
-                "http://www.hdwallpapers.in/3d__abstract-desktop-wallpapers/page", R.mipmap.bg_fav, R.mipmap.cover);
+                "http://www.hdwallpapers.in/3d__abstract-desktop-wallpapers/page/", R.mipmap.bg_fav, R.mipmap.cover);
         insertDefaults(db, 2, "Animals & Birds",
-                "http://www.hdwallpapers.in/animals__birds-desktop-wallpapers/page", R.mipmap.bg_fav, R.mipmap.cover);
+                "http://www.hdwallpapers.in/animals__birds-desktop-wallpapers/page/", R.mipmap.bg_fav, R.mipmap.cover);
         insertDefaults(db, 3, "Anime",
                 "http://www.hdwallpapers.in/anime-desktop-wallpapers/page/", R.mipmap.bg_fav, R.mipmap.cover);
         insertDefaults(db, 4, "Beach",
@@ -67,7 +67,7 @@ public class ChuDeDatabase extends SQLiteOpenHelper {
         insertDefaults(db, 20, "Music",
                 "http://www.hdwallpapers.in/music-desktop-wallpapers/page/", R.mipmap.bg_fav, R.mipmap.cover);
         insertDefaults(db, 21, "Movies",
-                "http://www.hdwallpapers.in/movie-desktop-wallpapers/page/", R.mipmap.bg_fav, R.mipmap.cover);
+                "http://www.hdwallpapers.in/movies-desktop-wallpapers/page/", R.mipmap.bg_fav, R.mipmap.cover);
         insertDefaults(db, 22, "Nature",
                 "http://www.hdwallpapers.in/nature__landscape-desktop-wallpapers/page/", R.mipmap.bg_fav, R.mipmap.cover);
         insertDefaults(db, 23, "Others",
@@ -99,8 +99,9 @@ public class ChuDeDatabase extends SQLiteOpenHelper {
 
         c.moveToFirst();
 
-        while(c.moveToNext()){
+        while(!c.isAfterLast()){
             a.add(new ObjectCategories(c.getInt(0),c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
+            c.moveToNext();
         }
 
         c.close();

@@ -1,18 +1,16 @@
 package com.soft.kent.bebluewallpaper;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
+import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
-import com.soft.kent.bebluewallpaper.Listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 
@@ -30,7 +28,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
     private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscape";
     private final String METHOD_NAME = "getLinkImageLandscape";
     private static String link;
-
+    private static String ten;
     private ArrayList<ObjectImage> arrI;
     private RecyclerView rvAnh;
     private ImageAdapter imageAdapter;
@@ -39,7 +37,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_categories);
+        setContentView(R.layout.activity_datail_categories);
         init();
     }
 
@@ -51,7 +49,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ImageView cover = (ImageView) findViewById(R.id.cover);
-        cover.setImageResource(R.drawable.cover);
+        cover.setImageResource(R.mipmap.cover);
         getSupportActionBar().setTitle(ten);
 //        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
 //        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);

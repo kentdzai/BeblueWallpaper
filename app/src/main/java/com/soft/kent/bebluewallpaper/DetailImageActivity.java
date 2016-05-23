@@ -3,11 +3,8 @@ package com.soft.kent.bebluewallpaper;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -29,8 +26,8 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     private final String METHOD_NAME = "getLinkImageLandscape";
     private static String link = "http://www.hdwallpapers.in/latest_wallpapers/page/";
     int page = 1;
+    Bundle bundle;
     AdapterViewPager adapter;
-    ViewPager viewpager;
 
     private ArrayList<ObjectImage> arrI;
     private ProgressDialog dialog;
@@ -45,6 +42,8 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void init() {
+        bundle = getIntent().getBundleExtra("data");
+
         if (link.endsWith("/")) {
             link = new StringBuilder(link).append(page).toString();
         } else {
@@ -132,7 +131,7 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
                 String ImageSmall = soapObject.getProperty("ImageSmall").toString();
                 String LinkDetail = soapObject.getProperty("LinkDetail").toString();
                 arrI.add(new ObjectImage(ImageSmall, LinkDetail));
-                adapter.addTab(new TabDetailImage(LinkDetail), "");
+                adapter.addTab(new TabDetailImage(LinkDetail,arrI.size()), "");
                 adapter.notifyDataSetChanged();
             }
             MyLog.e(arrI.get(0).getImageSmall());

@@ -8,5 +8,6 @@ import android.util.Log;
 public class MyLog {
     public static void e(String msg) {
         Log.e("MY_WATCH", msg);
+        //ahihi
     }
 }

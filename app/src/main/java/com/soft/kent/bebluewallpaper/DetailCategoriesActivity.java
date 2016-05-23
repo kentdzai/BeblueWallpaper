@@ -1,9 +1,7 @@
 package com.soft.kent.bebluewallpaper;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -51,15 +49,9 @@ public class DetailCategoriesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        toolbar.setBackgroundResource(R.drawable.cover);
         ImageView cover = (ImageView) findViewById(R.id.cover);
-        cover.setImageResource(R.drawable.cover);
+        cover.setImageResource(R.mipmap.cover);
         getSupportActionBar().setTitle(ten);
-//        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
-//        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setCustomView(R.layout.custom_title);
-//        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.naruto_hinata));
         index = 1;
         rvAnh = (RecyclerView) findViewById(R.id.recycler_view_detail_categories);
         rvAnh.setLayoutManager(new GridLayoutManager(this, 2));

@@ -1,10 +1,14 @@
 package com.soft.kent.bebluewallpaper;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -19,6 +23,7 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 
+@SuppressLint("NewApi")
 public class DetailImageActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
     private final String NAME_SPACE = "http://tempuri.org/";
     private final String URL = "http://api.ixinh.net/services.asmx?op=getLinkImageLandscape";
@@ -28,11 +33,12 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     int page = 1;
     Bundle bundle;
     AdapterViewPager adapter;
+    ViewPager viewpager;
 
     private ArrayList<ObjectImage> arrI;
     private ProgressDialog dialog;
     private int index;
-    ViewPager viewpager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +49,6 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
 
     private void init() {
         bundle = getIntent().getBundleExtra("data");
-
         if (link.endsWith("/")) {
             link = new StringBuilder(link).append(page).toString();
         } else {
@@ -55,10 +60,11 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
         new AsyncGetAllCategory().execute(link);
     }
 
+
     public void setViewPager(ViewPager viewPager) {
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(this);
-        viewPager.setCurrentItem(bundle.getInt("position"),true);
+        viewPager.setCurrentItem(bundle.getInt("position"), true);
     }
 
     int i = 0;
@@ -88,6 +94,7 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     }
 
 
+    @SuppressLint("NewApi")
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
@@ -131,7 +138,7 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
                 String ImageSmall = soapObject.getProperty("ImageSmall").toString();
                 String LinkDetail = soapObject.getProperty("LinkDetail").toString();
                 arrI.add(new ObjectImage(ImageSmall, LinkDetail));
-                adapter.addTab(new TabDetailImage(LinkDetail,arrI.size()), "");
+                adapter.addTab(new TabDetailImage(LinkDetail, arrI.size()), "");
                 adapter.notifyDataSetChanged();
             }
             MyLog.e(arrI.get(0).getImageSmall());

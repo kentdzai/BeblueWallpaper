@@ -1,6 +1,9 @@
 package com.soft.kent.bebluewallpaper;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +31,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
     private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscape";
     private final String METHOD_NAME = "getLinkImageLandscape";
     private static String link;
-    private static String ten;
+    public static String ten;
     private ArrayList<ObjectImage> arrI;
     private RecyclerView rvAnh;
     private ImageAdapter imageAdapter;
@@ -41,7 +44,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
         init();
     }
 
-    public void init(){
+    public void init() {
         Bundle bundle = getIntent().getBundleExtra("data");
         ten = bundle.getString("ten");
         link = bundle.getString("link");
@@ -49,7 +52,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ImageView cover = (ImageView) findViewById(R.id.cover);
-        cover.setImageResource(R.mipmap.cover);
+        cover.setImageResource(R.drawable.cover);
         getSupportActionBar().setTitle(ten);
 //        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
 //        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
@@ -71,7 +74,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         imageAdapter.notifyItemRemoved(arrI.size());
-                        new  AsyncGetAllCategory().execute();
+                        new AsyncGetAllCategory().execute();
 
                     }
                 }, 1);
@@ -91,8 +94,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
     }
 
 
-
-
+    @SuppressLint("NewApi")
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
@@ -105,7 +107,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
 
             imageAdapter.notifyDataSetChanged();
 
-            Toast.makeText(getBaseContext(), "Load trang: "+index, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "Load trang: " + index, Toast.LENGTH_SHORT).show();
 
             imageAdapter.setLoaded();
             index++;
@@ -128,7 +130,7 @@ public class DetailCategoriesActivity extends AppCompatActivity {
     public void getFahrenheit() {
 
         SoapObject request = new SoapObject(NAME_SPACE, METHOD_NAME);
-        request.addProperty("sUrl",link+index);
+        request.addProperty("sUrl", link + index);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
                 SoapEnvelope.VER11);
         envelope.dotNet = true;
@@ -138,10 +140,10 @@ public class DetailCategoriesActivity extends AppCompatActivity {
         try {
             androidHttpTransport.call(SOAP_ACTION, envelope);
             SoapObject response = (SoapObject) envelope.bodyIn;
-            SoapObject  getLinkImageLandscapeResult= (SoapObject) response.getProperty("getLinkImageLandscapeResult");
+            SoapObject getLinkImageLandscapeResult = (SoapObject) response.getProperty("getLinkImageLandscapeResult");
 
-            for (int i = 0;i < getLinkImageLandscapeResult.getPropertyCount(); i++){
-                SoapObject soapObject = (SoapObject)getLinkImageLandscapeResult.getProperty(i);
+            for (int i = 0; i < getLinkImageLandscapeResult.getPropertyCount(); i++) {
+                SoapObject soapObject = (SoapObject) getLinkImageLandscapeResult.getProperty(i);
 //                Log.e("STT: "+i,soapObject.toString());
                 String ImageSmall = soapObject.getProperty("ImageSmall").toString();
                 String LinkDetail = soapObject.getProperty("LinkDetail").toString();

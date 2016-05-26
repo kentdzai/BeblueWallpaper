@@ -108,6 +108,7 @@ public class TabDetailImage extends Fragment {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+
         }
     }
 

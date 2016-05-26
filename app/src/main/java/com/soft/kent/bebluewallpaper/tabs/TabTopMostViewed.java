@@ -16,13 +16,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.soft.kent.bebluewallpaper.DetailImageActivity;
-import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
-import com.soft.kent.bebluewallpaper.Listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.MyLog;
-import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
-import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
+import com.soft.kent.bebluewallpaper.Listener1.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 import com.soft.kent.bebluewallpaper.view.Entity;
 
@@ -36,7 +33,7 @@ import java.util.ArrayList;
 /**
  * Created by kentd on 18/05/2016.
  */
-public class TabTopMostViewed extends Fragment implements OnLoadMoreListener {
+public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewallpaper.Listener1.OnLoadMoreListener {
     private final String NAME_SPACE = "http://tempuri.org/";
     private final String URL = "http://api.ixinh.net/services.asmx?op=getLinkImageLandscape";
     private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscape";
@@ -99,13 +96,12 @@ public class TabTopMostViewed extends Fragment implements OnLoadMoreListener {
             @Override
             public void run() {
                 imageAdapter.notifyItemRemoved(arrI.size());
-                link = link.replace(link.substring(link.length() - 1), String.valueOf(index));
+                link = link.replace("/page/" + (index - 1), "/page/" + index);
                 new AsyncGetAllCategory().execute(link);
 
             }
         });
     }
-
 
     @Override
     public void onResume() {

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.soft.kent.bebluewallpaper.DetailCategoriesActivity;
-import com.soft.kent.bebluewallpaper.Listener1.RecyclerItemClickListener;
+import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.adapter.CategoriesAdapter;
 import com.soft.kent.bebluewallpaper.model.ObjectCategories;

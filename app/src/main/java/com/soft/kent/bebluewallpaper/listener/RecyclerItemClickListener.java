@@ -1,4 +1,4 @@
-package com.soft.kent.bebluewallpaper.Listener1;
+package com.soft.kent.bebluewallpaper.listener;
 
 /**
  * Created by QuyetChu on 5/19/16.

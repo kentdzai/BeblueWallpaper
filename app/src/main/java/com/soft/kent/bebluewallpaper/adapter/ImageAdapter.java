@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.soft.kent.bebluewallpaper.Listener1.OnLoadMoreListener;
+import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 

@@ -16,23 +16,14 @@ import android.widget.TextView;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
 import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
+import com.soft.kent.bebluewallpaper.model.GetPage;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
-import com.soft.kent.bebluewallpaper.view.Entity;
+import com.soft.kent.bebluewallpaper.model.Entity;
 import com.squareup.picasso.Picasso;
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 
 public class DetailCategoriesActivity extends AppCompatActivity implements OnLoadMoreListener {
-    private final String NAME_SPACE = "http://tempuri.org/";
-    private final String URL = "http://api.ixinh.net/services.asmx?op=getLinkImageLandscape";
-    private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscape";
-    private final String METHOD_NAME = "getLinkImageLandscape";
-
     private static String linkCategories;
     public static String titleCategories;
     int avatar;
@@ -131,7 +122,7 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
-            getAllLatestWallpaper(params[0]);
+            GetPage.getAllWallpaper(params[0], arrI);
             return null;
         }
 
@@ -159,31 +150,6 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
 
         @Override
         protected void onProgressUpdate(Void... values) {
-        }
-    }
-
-    public void getAllLatestWallpaper(String link) {
-        MyLog.e("TASK_CATEGORIES: " + link);
-        SoapObject request = new SoapObject(NAME_SPACE, METHOD_NAME);
-        request.addProperty("sUrl", link);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(request);
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-        try {
-            androidHttpTransport.call(SOAP_ACTION, envelope);
-            SoapObject response = (SoapObject) envelope.bodyIn;
-            SoapObject getLinkImageLandscapeResult = (SoapObject)
-                    response.getProperty("getLinkImageLandscapeResult");
-            for (int i = 0; i < getLinkImageLandscapeResult.getPropertyCount(); i++) {
-                SoapObject soapObject = (SoapObject) getLinkImageLandscapeResult.getProperty(i);
-                String ImageSmall = soapObject.getProperty("ImageSmall").toString();
-                String LinkDetail = soapObject.getProperty("LinkDetail").toString();
-                arrI.add(new ObjectImage(ImageSmall, LinkDetail));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

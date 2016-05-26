@@ -20,13 +20,9 @@ import com.soft.kent.bebluewallpaper.MyLog;
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
 import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
+import com.soft.kent.bebluewallpaper.model.GetPage;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
-import com.soft.kent.bebluewallpaper.view.Entity;
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
+import com.soft.kent.bebluewallpaper.model.Entity;
 
 import java.util.ArrayList;
 
@@ -34,10 +30,6 @@ import java.util.ArrayList;
  * Created by kentd on 18/05/2016.
  */
 public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener {
-    private final String NAME_SPACE = "http://tempuri.org/";
-    private final String URL = "http://api.ixinh.net/services.asmx?op=getLinkImageLandscape";
-    private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscape";
-    private final String METHOD_NAME = "getLinkImageLandscape";
     private static String link = "http://www.hdwallpapers.in/top_view_wallpapers/page/";
 
     public static ArrayList<ObjectImage> arrI;
@@ -113,7 +105,7 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
-            getAllLatestWallpaper(params[0]);
+            GetPage.getAllWallpaper(params[0], arrI);
             return null;
         }
 
@@ -136,31 +128,6 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
 
         @Override
         protected void onProgressUpdate(Void... values) {
-        }
-    }
-
-    public void getAllLatestWallpaper(String link) {
-        MyLog.e("TASK: " + link);
-        SoapObject request = new SoapObject(NAME_SPACE, METHOD_NAME);
-        request.addProperty("sUrl", link);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(request);
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-        try {
-            androidHttpTransport.call(SOAP_ACTION, envelope);
-            SoapObject response = (SoapObject) envelope.bodyIn;
-            SoapObject getLinkImageLandscapeResult = (SoapObject)
-                    response.getProperty("getLinkImageLandscapeResult");
-            for (int i = 0; i < getLinkImageLandscapeResult.getPropertyCount(); i++) {
-                SoapObject soapObject = (SoapObject) getLinkImageLandscapeResult.getProperty(i);
-                String ImageSmall = soapObject.getProperty("ImageSmall").toString();
-                String LinkDetail = soapObject.getProperty("LinkDetail").toString();
-                arrI.add(new ObjectImage(ImageSmall, LinkDetail));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

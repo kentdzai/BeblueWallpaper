@@ -8,18 +8,16 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.soft.kent.bebluewallpaper.adapter.AdapterViewPager;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 import com.soft.kent.bebluewallpaper.tabs.TabDetailImage;
 import com.soft.kent.bebluewallpaper.tabs.TabLatestWallpapers;
 import com.soft.kent.bebluewallpaper.tabs.TabTopMostViewed;
-import com.soft.kent.bebluewallpaper.view.Entity;
+import com.soft.kent.bebluewallpaper.model.Entity;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -72,14 +70,14 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
             adapter = new AdapterViewPager(getSupportFragmentManager());
             bundle = it.getBundleExtra("data");
             link = bundle.getString("linkPage");
-            MyLog.e("REI: " + link);
+//            MyLog.e("REI: " + link);
 
             positionPage = bundle.getInt("position");
             page = Integer.valueOf(link.substring(link.length() - 1));
 
-            MyLog.e("PAGE REI: " + page);
+//            MyLog.e("PAGE REI: " + page);
             String from = bundle.getString(Entity.KEY_DETAIL);
-            MyLog.e("FROM " + from);
+//            MyLog.e("FROM " + from);
             if (from.equals(Entity.LATEST_WALLPAPER)) {
                 arrI = TabLatestWallpapers.arrI;
             } else if (from.equals(Entity.TOP_MOST_VIEWED)) {

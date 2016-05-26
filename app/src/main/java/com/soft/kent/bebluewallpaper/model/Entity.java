@@ -1,4 +1,4 @@
-package com.soft.kent.bebluewallpaper.view;
+package com.soft.kent.bebluewallpaper.model;
 
 /**
  * Created by kentd on 25/05/2016.

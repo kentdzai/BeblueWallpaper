@@ -27,9 +27,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DetailCategoriesActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="Chu De"
-            android:parentActivityName=".MainActivity"/>
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

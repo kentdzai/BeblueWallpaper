@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+import com.koushikdutta.ion.Ion;
 import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
@@ -63,7 +65,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context= parent.getContext();
+        context = parent.getContext();
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
             return new UserViewHolder(view);
@@ -80,6 +82,8 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             ObjectImage objectImage = mUsers.get(position);
             UserViewHolder userViewHolder = (UserViewHolder) holder;
             Picasso.with(context).load(objectImage.getImageSmall()).into(userViewHolder.imageView);
+//            Glide.with(context).load(objectImage.getImageSmall()).into(userViewHolder.imageView);
+//            Ion.with(context).load(objectImage.getImageSmall()).intoImageView(userViewHolder.imageView);
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);

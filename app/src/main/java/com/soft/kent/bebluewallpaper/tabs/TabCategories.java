@@ -38,12 +38,14 @@ public class TabCategories extends Fragment {
 
         rcCategories.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        Toast.makeText(getContext(), listObjectCategories.get(position).getLinkChuDe()+"", Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Toast.makeText(getContext(), listObjectCategories.get(position).getLinkChuDe() + "", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), DetailCategoriesActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putString("link", listObjectCategories.get(position).getLinkChuDe());
-                        bundle.putString("ten", listObjectCategories.get(position).getTenChuDe());
+                        bundle.putString("linkCategories", listObjectCategories.get(position).getLinkChuDe());
+                        bundle.putString("titleCategories", listObjectCategories.get(position).getTenChuDe());
+                        bundle.putInt("imgAvatar", listObjectCategories.get(position).getAnhDaiDien());
                         intent.putExtra("data", bundle);
                         startActivity(intent);
                     }

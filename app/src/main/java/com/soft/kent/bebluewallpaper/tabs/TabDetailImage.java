@@ -1,6 +1,8 @@
 package com.soft.kent.bebluewallpaper.tabs;
 
 import android.annotation.SuppressLint;
+import android.media.Image;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +19,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.koushikdutta.ion.Ion;
 import com.soft.kent.bebluewallpaper.MyLog;
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.model.ObjectDetailImage;
@@ -48,6 +54,7 @@ public class TabDetailImage extends Fragment {
     String link;
     Handler handler;
     CoordinatorLayout LayoutDetailImage;
+    SimpleDraweeView fDetail;
 
     public TabDetailImage(String link, int size) {
         this.link = link;
@@ -55,6 +62,7 @@ public class TabDetailImage extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Fresco.initialize(this.getContext().getApplicationContext());
         View v = inflater.inflate(R.layout.activity_detail_image, container, false);
         init(v);
         handler = new Handler(Looper.getMainLooper());
@@ -64,7 +72,7 @@ public class TabDetailImage extends Fragment {
     private void init(View v) {
         LayoutDetailImage = (CoordinatorLayout) v.findViewById(R.id.LayoutDetailImage);
 //        toolbar = (Toolbar) v.findViewById(R.id.toolbar1);
-//        getActivity().setSupportActionBar(toolbar);
+//        (toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        toolbar.setNavigationIcon(R.mipmap.ic_backarrow);
@@ -79,7 +87,12 @@ public class TabDetailImage extends Fragment {
         btnSetWallpaper = (Button) v.findViewById(R.id.btnSetWallpaper);
         tvAuthorName = (TextView) v.findViewById(R.id.tvAuthorName);
         arrrObbjectDetailImage = new ArrayList<>();
+
+        fDetail = (SimpleDraweeView) v.findViewById(R.id.fDetail);
+
+
         LayoutDetailImage.setVisibility(View.GONE);
+
         new GetAllDetailImageTask().execute();
     }
 
@@ -147,21 +160,32 @@ public class TabDetailImage extends Fragment {
                     Integer.parseInt(getLinkImageLandscapeDetailResult.getPropertyAsString("Download"));
             String DateTime =
                     getLinkImageLandscapeDetailResult.getPropertyAsString("DateTime");
-//            MyLog.e("ImageSmall: " + ImageSmall);
-//            MyLog.e("LinkDetail: " + LinkDetail);
-//            MyLog.e("ImageDisplay: " + ImageDisplay);
-//            MyLog.e("ImageResolution: " + ImageResolution);
-//            MyLog.e("LinkDown: " + LinkDown);
+            final String AuthorName =
+                    getLinkImageLandscapeDetailResult.getPropertyAsString("AuthorName");
+            MyLog.e("WallpaperName " + WallpaperName);
+            MyLog.e("LinkDetail: " + LinkDetail);
+            MyLog.e("ImageDisplay: " + ImageDisplay);
             MyLog.e("CatetoryName: " + CatetoryName);
-            MyLog.e("DateTime: " + DateTime);
+            MyLog.e("ImageResolution: " + ImageResolution);
+            MyLog.e("ImageSmall: " + ImageSmall);
+//            MyLog.e("LinkDown: " + LinkDown);
+//            MyLog.e("DateTime: " + DateTime);
+//            MyLog.e("AuthorName: " + AuthorName);
 
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Picasso.with(getContext()).load(ImageDisplay).into(ivDetail);
+                    if (getContext() != null) {
+//                    Picasso.with(getContext()).load(ImageDisplay).into(ivDetail);
+//                    Glide.with(getContext()).load(ImageDisplay).into(ivDetail);
+                        Ion.with(getContext()).load(ImageDisplay).intoImageView(ivDetail);
+                    }
+
+//                    fDetail.setImageURI(Uri.parse(ImageDisplay));
                     LayoutDetailImage.setVisibility(View.VISIBLE);
                     tvTitleDetailImage.setText(WallpaperName);
                     tvCountViewDetailImage.setText(String.valueOf(Download));
+                    tvAuthorName.setText(AuthorName);
 //                    MyLog.e("Tab: " + ImageDisplay);
                 }
             });

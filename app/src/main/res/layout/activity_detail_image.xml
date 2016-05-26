@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/LayoutDetailImage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,7 +27,14 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/cover" />
+                    android:src="@mipmap/cover"
+                    android:visibility="visible" />
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/fDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
 
                 <include layout="@layout/content_detail_image" />
             </LinearLayout>

@@ -1,18 +1,24 @@
 package com.soft.kent.bebluewallpaper;
 
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
+import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
+import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 
 import org.ksoap2.SoapEnvelope;
@@ -20,6 +26,7 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class DetailCategoriesActivity extends AppCompatActivity {
@@ -75,16 +82,19 @@ public class DetailCategoriesActivity extends AppCompatActivity {
 
         });
 
-//        rvAnh.addOnItemTouchListener(
-//                new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
-//                    @Override public void onItemClick(View view, int position) {
+        rvAnh.addOnItemTouchListener(
+                new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
 //                        Intent intent = new Intent(getBaseContext(), DetailImageActivity.class);
 //                        intent.putExtra("linkDetail", arrI.get(position).getLinkDetail());
 //                        startActivity(intent);
-//                    }
-//                })
-//        );
+
+                    }
+                })
+        );
     }
+
+
 
 
     @SuppressLint("NewApi")

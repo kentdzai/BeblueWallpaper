@@ -4,11 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -79,6 +76,7 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     public void onPageSelected(int position) {
         if (arrI != null && position == (arrI.size() - 4)) {
             page++;
+
             if (!link.endsWith("/")) {
 //                MyLog.e("Link 1: " + link);
 //                MyLog.e("Page: " + page);

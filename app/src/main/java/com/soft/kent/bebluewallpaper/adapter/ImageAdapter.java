@@ -9,10 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.soft.kent.bebluewallpaper.R;
+import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -79,7 +80,12 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (holder instanceof UserViewHolder) {
             ObjectImage objectImage = mUsers.get(position);
             UserViewHolder userViewHolder = (UserViewHolder) holder;
-            Picasso.with(context).load(objectImage.getImageSmall()).into(userViewHolder.imageView);
+            Glide.with(context).load(objectImage.getImageSmall())
+                    .thumbnail(0.5f)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(userViewHolder.imageView);
+//            Picasso.with(context).load(objectImage.getImageSmall()).into(userViewHolder.imageView);
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
+import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.model.ObjectCategories;
 

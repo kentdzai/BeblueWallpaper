@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.soft.kent.bebluewallpaper.DetailImageActivity;
-import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
-import com.soft.kent.bebluewallpaper.Listener.RecyclerItemClickListener;
+import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
+import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;

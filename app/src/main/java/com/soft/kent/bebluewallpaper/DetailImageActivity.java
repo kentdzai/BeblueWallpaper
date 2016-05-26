@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -115,6 +113,14 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
             link = link.replace(link.substring(link.length() - 1), String.valueOf(page));
 //            MyLog.e("MAX: " + link);
             new AsyncGetAllCategory().execute(link);
+
+            if (!link.endsWith("/")) {
+//                MyLog.e("Link 1: " + link);
+//                MyLog.e("Page: " + page);
+                link = link.replace(link.substring(link.length() - 1), String.valueOf(page));
+//                MyLog.e("Link 2: " + link);
+                new AsyncGetAllCategory().execute(link);
+            }
         }
     }
 

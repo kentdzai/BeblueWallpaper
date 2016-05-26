@@ -1,11 +1,21 @@
 package com.soft.kent.bebluewallpaper.tabs;
 
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
+import android.app.WallpaperManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.media.Image;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -33,6 +44,8 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 @SuppressLint("ValidFragment")
@@ -54,6 +67,11 @@ public class TabDetailImage extends Fragment {
     String link;
     Handler handler;
     CoordinatorLayout LayoutDetailImage;
+    String ImageDisplay;
+    String WallpaperName;
+    String LinkDown;
+    Bitmap bmp;
+    String filePath;
     SimpleDraweeView fDetail;
 
     public TabDetailImage(String link, int size) {
@@ -66,8 +84,84 @@ public class TabDetailImage extends Fragment {
         View v = inflater.inflate(R.layout.activity_detail_image, container, false);
         init(v);
         handler = new Handler(Looper.getMainLooper());
+        btnSetWallpaper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPatch();
+
+                if(bmp == null){
+                    getContext().registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                    downloadFile(LinkDown);
+                }else {
+                    setWallPaper(bmp);
+                }
+
+
+            }
+        });
+
+        btnDownloadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadFile(LinkDown);
+            }
+        });
         return v;
     }
+
+    public void setWallPaper(Bitmap bmp){
+        WallpaperManager myWallpaperManager
+                = WallpaperManager.getInstance(getActivity());
+        try {
+            myWallpaperManager.setBitmap(bmp);
+            Toast.makeText(getActivity(), "Set wallpaper success !!!", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }
+    }
+
+    public Bitmap getPatch(){
+        filePath = Environment.getExternalStorageDirectory()
+                .getAbsolutePath() + File.separator + "BeblueWallPaper/"+WallpaperName+".jpg";
+        bmp = BitmapFactory.decodeFile(filePath);
+        return bmp;
+    }
+    BroadcastReceiver onComplete = new BroadcastReceiver() {
+        public void onReceive(Context ctxt, Intent intent) {
+            Toast.makeText(getActivity(), "Download complete !!!", Toast.LENGTH_SHORT).show();
+            getPatch();
+            setWallPaper(bmp);
+            getContext().unregisterReceiver(onComplete);
+        }
+    };
+
+    public void downloadFile(String uRl) {
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+
+        if (!mediaStorageDir.exists()) {
+            mediaStorageDir.mkdirs();
+        }
+
+        DownloadManager mgr = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+
+        Uri downloadUri = Uri.parse(uRl);
+        DownloadManager.Request request = new DownloadManager.Request(
+                downloadUri);
+
+        request.setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_WIFI
+                        | DownloadManager.Request.NETWORK_MOBILE)
+                .setAllowedOverRoaming(true).setTitle(WallpaperName)
+                .setDescription("Downloading ...")
+                .setDestinationInExternalPublicDir("/BeblueWallPaper", WallpaperName+".jpg");
+
+        mgr.enqueue(request);
+
+    }
+
+
 
     private void init(View v) {
         LayoutDetailImage = (CoordinatorLayout) v.findViewById(R.id.LayoutDetailImage);
@@ -95,7 +189,6 @@ public class TabDetailImage extends Fragment {
 
         new GetAllDetailImageTask().execute();
     }
-
 
     private class GetAllDetailImageTask extends AsyncTask<String, Void, Void> {
         @Override
@@ -139,9 +232,9 @@ public class TabDetailImage extends Fragment {
                     getLinkImageLandscapeDetailResult.getProperty("DownloadLinks");
             SoapObject ImageLandScape = (SoapObject)
                     DownloadLinks.getProperty("ImageLandScape");
-            final String ImageDisplay = getLinkImageLandscapeDetailResult.getPropertyAsString("ImageDisplay");
+            ImageDisplay = getLinkImageLandscapeDetailResult.getPropertyAsString("ImageDisplay");
             String ImageResolution = ImageLandScape.getPropertyAsString("ImageResolution");
-            String LinkDown = ImageLandScape.getPropertyAsString("LinkDown");
+            LinkDown = ImageLandScape.getPropertyAsString("LinkDown");
             SoapObject ImageRelate = (SoapObject)
                     getLinkImageLandscapeDetailResult.getProperty("ImageRelate");
             SoapObject ImageLandscapeThumb = (SoapObject)
@@ -152,7 +245,7 @@ public class TabDetailImage extends Fragment {
                     getLinkImageLandscapeDetailResult.getProperty("Tags");
             String tag1 = Tags.getPropertyAsString(0);
             String tag2 = Tags.getPropertyAsString(1);
-            final String WallpaperName =
+            WallpaperName =
                     getLinkImageLandscapeDetailResult.getPropertyAsString("WallpaperName");
             String CatetoryName =
                     getLinkImageLandscapeDetailResult.getPropertyAsString("CatetoryName");
@@ -175,6 +268,13 @@ public class TabDetailImage extends Fragment {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+//                    Glide.with(getContext()).load(ImageDisplay)
+//                            .thumbnail(0.1f)
+//                            .crossFade()
+//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                            .into(ivDetail);
+////
+                    Picasso.with(getContext()).load(ImageDisplay).into(ivDetail);
                     if (getContext() != null) {
 //                    Picasso.with(getContext()).load(ImageDisplay).into(ivDetail);
 //                    Glide.with(getContext()).load(ImageDisplay).into(ivDetail);

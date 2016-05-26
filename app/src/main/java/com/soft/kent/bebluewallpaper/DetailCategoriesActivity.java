@@ -1,8 +1,13 @@
 package com.soft.kent.bebluewallpaper;
 
 import android.content.Intent;
+import android.annotation.SuppressLint;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,12 +15,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.soft.kent.bebluewallpaper.Listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.Listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
+import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
+import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 import com.soft.kent.bebluewallpaper.view.Entity;
 import com.squareup.picasso.Picasso;
@@ -25,6 +33,7 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class DetailCategoriesActivity extends AppCompatActivity implements OnLoadMoreListener {
@@ -64,6 +73,9 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
         rvAnh.setLayoutManager(new GridLayoutManager(this, 2));
 
         Bundle bundle = getIntent().getBundleExtra("data");
+        ten = bundle.getString("ten");
+        link = bundle.getString("link");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         titleCategories = bundle.getString("titleCategories");
         linkCategories = bundle.getString("linkCategories") + index;
         MyLog.e("CAT REI: " + linkCategories);
@@ -74,6 +86,12 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
         toolbar.setTitle(titleCategories);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ImageView cover = (ImageView) findViewById(R.id.cover);
+        cover.setImageResource(R.mipmap.cover);
+        getSupportActionBar().setTitle(ten);
+        index = 1;
+        rvAnh = (RecyclerView) findViewById(R.id.recycler_view_detail_categories);
+        rvAnh.setLayoutManager(new GridLayoutManager(this, 2));
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationIcon(R.mipmap.ic_backarrow);
 
@@ -116,7 +134,20 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
                 new AsyncGetAllCategory().execute(linkCategories);
             }
         });
+
+        rvAnh.addOnItemTouchListener(
+                new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+//                        Intent intent = new Intent(getBaseContext(), DetailImageActivity.class);
+//                        intent.putExtra("linkDetail", arrI.get(position).getLinkDetail());
+//                        startActivity(intent);
+
+                    }
+                })
+        );
     }
+
+
 
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
         @Override

@@ -1,6 +1,8 @@
 package com.soft.kent.bebluewallpaper;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +19,7 @@ import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
 import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
 import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.model.GetPage;
+import com.soft.kent.bebluewallpaper.model.MyHandler;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 import com.soft.kent.bebluewallpaper.model.Entity;
 import com.squareup.picasso.Picasso;
@@ -33,10 +36,13 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
     TextView tvTitleCategories;
 
     public static ArrayList<ObjectImage> arrI;
-    private RecyclerView rvAnh;
+    private RecyclerView rcDetailCategories;
     private ImageAdapter imageAdapter;
-    private int index = 1;
+    public static int index = 1;
 
+    Activity activity;
+    MyHandler mh;
+    int column = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +54,16 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
     public void init() {
         arrI = new ArrayList<>();
 
+        mh = new MyHandler(DetailCategoriesActivity.this);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+            column = 2;
+        else column = 4;
+
         ivAvatar = (ImageView) findViewById(R.id.ivAvatar);
         toolbar = (Toolbar) findViewById(R.id.toolbarCategories);
         tvTitleCategories = (TextView) findViewById(R.id.tvTitleCategories);
-        rvAnh = (RecyclerView) findViewById(R.id.recycler_view_detail_categories);
-        rvAnh.setLayoutManager(new GridLayoutManager(this, 2));
+        rcDetailCategories = (RecyclerView) findViewById(R.id.rcDetailCategories);
+        rcDetailCategories.setLayoutManager(new GridLayoutManager(this, column));
 
         Bundle bundle = getIntent().getBundleExtra("data");
         titleCategories = bundle.getString("titleCategories");
@@ -74,11 +85,11 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
 
         new AsyncGetAllCategory().execute(linkCategories);
 
-        imageAdapter = new ImageAdapter(rvAnh, arrI);
-        rvAnh.setAdapter(imageAdapter);
+        imageAdapter = new ImageAdapter(rcDetailCategories, arrI);
+        rcDetailCategories.setAdapter(imageAdapter);
         imageAdapter.setOnLoadMoreListener(this);
 
-        rvAnh.addOnItemTouchListener(
+        rcDetailCategories.addOnItemTouchListener(
                 new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -105,7 +116,7 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
             }
         });
 
-        rvAnh.addOnItemTouchListener(
+        rcDetailCategories.addOnItemTouchListener(
                 new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -161,5 +172,11 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        rcDetailCategories.setLayoutManager(new GridLayoutManager(DetailCategoriesActivity.this, mh.getScreenOrientation(newConfig)));
     }
 }

@@ -1,83 +1,82 @@
 package com.soft.kent.bebluewallpaper;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.soft.kent.bebluewallpaper.adapter.AdapterViewPager;
+import com.soft.kent.bebluewallpaper.model.GetPage;
+import com.soft.kent.bebluewallpaper.model.ObjectDetailImage;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 import com.soft.kent.bebluewallpaper.tabs.TabDetailImage;
 import com.soft.kent.bebluewallpaper.tabs.TabLatestWallpapers;
 import com.soft.kent.bebluewallpaper.tabs.TabTopMostViewed;
 import com.soft.kent.bebluewallpaper.model.Entity;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
-@SuppressLint("NewApi")
 public class DetailImageActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
-    private final String NAME_SPACE = "http://tempuri.org/";
-    private final String URL = "http://api.ixinh.net/services.asmx?op=getLinkImageLandscape";
-    private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscape";
-    private final String METHOD_NAME = "getLinkImageLandscape";
+
     private static String link = "http://www.hdwallpapers.in/latest_wallpapers/page/";
 
     int positionPage = 0;
     int page = 1;
-    int pageOpen = 1;
     Bundle bundle;
+    String from;
+
     AdapterViewPager adapter;
     ViewPager viewpager;
     Toolbar toolbar;
+    int positionFragment;
 
     private ArrayList<ObjectImage> arrI;
     private ProgressDialog dialog;
-    private int index;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_image);
-        arrI = new ArrayList<>();
-//        init(getIntent());
-        mahInit();
+        init(getIntent());
     }
 
-    public void mahInit() {
-        Intent it = getIntent();
+
+    public void init(Intent it) {
+        arrI = new ArrayList<>();
         if (it != null) {
             toolbar = (Toolbar) findViewById(R.id.toolbarAllImage);
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setDisplayShowHomeEnabled(true);
             toolbar.setNavigationIcon(R.mipmap.ic_backarrow);
             toolbar.setOverflowIcon(getResources().getDrawable(R.mipmap.ic_menu2));
-
             viewpager = (ViewPager) findViewById(R.id.vPAllImage);
             adapter = new AdapterViewPager(getSupportFragmentManager());
             bundle = it.getBundleExtra("data");
             link = bundle.getString("linkPage");
-//            MyLog.e("REI: " + link);
-
             positionPage = bundle.getInt("position");
             page = Integer.valueOf(link.substring(link.length() - 1));
-
-//            MyLog.e("PAGE REI: " + page);
-            String from = bundle.getString(Entity.KEY_DETAIL);
-//            MyLog.e("FROM " + from);
+            from = bundle.getString(Entity.KEY_DETAIL);
             if (from.equals(Entity.LATEST_WALLPAPER)) {
                 arrI = TabLatestWallpapers.arrI;
             } else if (from.equals(Entity.TOP_MOST_VIEWED)) {
@@ -93,7 +92,6 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
         }
     }
 
-
     public void setViewPager(ViewPager viewPager) {
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(this);
@@ -105,20 +103,11 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
 
     @Override
     public void onPageSelected(int position) {
-//        MyLog.e("position " + position);
+        positionFragment = position;
         if (arrI != null && position == (arrI.size() - 1)) {
             page++;
             link = link.replace(link.substring(link.length() - 1), String.valueOf(page));
-//            MyLog.e("MAX: " + link);
             new AsyncGetAllCategory().execute(link);
-
-            if (!link.endsWith("/")) {
-//                MyLog.e("Link 1: " + link);
-//                MyLog.e("Page: " + page);
-                link = link.replace(link.substring(link.length() - 1), String.valueOf(page));
-//                MyLog.e("Link 2: " + link);
-                new AsyncGetAllCategory().execute(link);
-            }
         }
     }
 
@@ -126,56 +115,17 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
     public void onPageScrollStateChanged(int state) {
     }
 
-
-    @SuppressLint("NewApi")
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
 
         @Override
         protected Void doInBackground(String... params) {
-            getCategories(params[0]);
+            GetPage.getAllWallpaperForDetailActivity(params[0], arrI, adapter);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
             adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        }
-
-    }
-
-    public void getCategories(String link) {
-        MyLog.e("TASK_DETAIL: " + link);
-        SoapObject request = new SoapObject(NAME_SPACE, METHOD_NAME);
-        request.addProperty("sUrl", link);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(request);
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-        try {
-            androidHttpTransport.call(SOAP_ACTION, envelope);
-            SoapObject response = (SoapObject) envelope.bodyIn;
-            SoapObject getLinkImageLandscapeResult = (SoapObject)
-                    response.getProperty("getLinkImageLandscapeResult");
-            for (int i = 0; i < getLinkImageLandscapeResult.getPropertyCount(); i++) {
-                SoapObject soapObject = (SoapObject) getLinkImageLandscapeResult.getProperty(i);
-                String ImageSmall = soapObject.getProperty("ImageSmall").toString();
-                String LinkDetail = soapObject.getProperty("LinkDetail").toString();
-                arrI.add(new ObjectImage(ImageSmall, LinkDetail));
-                adapter.addTab(new TabDetailImage(LinkDetail, arrI.size()), "");
-            }
-            MyLog.e("SIZE: " + arrI.size());
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -186,13 +136,114 @@ public class DetailImageActivity extends AppCompatActivity implements ViewPager.
         return true;
     }
 
+    ObjectDetailImage oD;
+    static final int PICK_CONTACT = 1;
+    TabDetailImage tD;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        tD = (TabDetailImage) adapter.getItem(positionFragment);
+        oD = tD.oD;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.action_set_wallpaper:
+                if (tD.getPatch() == null) {
+                    tD.getContext().registerReceiver(tD.onComplete
+                            , new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                    tD.downloadFile(oD.linkDownload);
+                } else {
+                    Intent shareIntent = new Intent();
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, tD.getFile(oD.wallpaperName));
+                    shareIntent.setType("image/jpeg");
+                    startActivity(Intent.createChooser(shareIntent, "Chia sẻ ảnh"));
+                }
+
+                //Set wallpaper
+                break;
+            case R.id.action_set_contact:
+                if (tD.getPatch() == null)
+                    tD.downloadFile(oD.linkDownload);
+                else
+                    startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), PICK_CONTACT);
+                break;
+            case R.id.action_share_image:
+                MyLog.e(tD.getFile(oD.wallpaperName).toString());
+
+                break;
+            case R.id.action_download_image:
+                if (tD.getPatch() == null)
+                    tD.downloadFile(oD.linkDownload);
+                else
+                    myToast("Download rồi mà!");
+                break;
+            case R.id.action_add_favorite:
+
+                break;
+            case R.id.action_report_image:
+
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void myToast(String msg) {
+        Toast.makeText(DetailImageActivity.this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PICK_CONTACT:
+                if (resultCode == Activity.RESULT_OK) {
+                    if (setDisplayPhotoByRawContactId(
+                            ContentUris.parseId(data.getData().buildUpon().build())
+                            , tD.getPatch()))
+                        myToast("thành công!");
+                    else
+                        myToast("thất bại");
+                }
+                break;
+        }
+    }
+
+    public boolean setDisplayPhotoByRawContactId(long rawContactId, Bitmap bmp) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        Uri pictureUri = Uri.withAppendedPath(ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI,
+                rawContactId), ContactsContract.RawContacts.DisplayPhoto.CONTENT_DIRECTORY);
+        try {
+            AssetFileDescriptor afd = getContentResolver().openAssetFileDescriptor(pictureUri, "rw");
+            OutputStream os = afd.createOutputStream();
+            os.write(byteArray);
+            os.close();
+            afd.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    //    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        link = link.replace("/page/" + (page), "/page/" + (page + 1));
+//        page = Integer.parseInt(link.substring(link.length() - 1));
+//        if (from.equals(Entity.LATEST_WALLPAPER)) {
+//            TabLatestWallpapers.arrI = arrI;
+//            TabLatestWallpapers.link = link;
+//        } else if (from.equals(Entity.TOP_MOST_VIEWED)) {
+//            TabTopMostViewed.arrI = arrI;
+//            TabTopMostViewed.index = page;
+//        } else if (from.equals(Entity.CATEGORIRES)) {
+//            DetailCategoriesActivity.arrI = arrI;
+//            DetailCategoriesActivity.index = page;
+//        }
+//        MyLog.e("DESTROYED");
+//    }
 }

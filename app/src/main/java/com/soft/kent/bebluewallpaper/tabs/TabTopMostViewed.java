@@ -1,7 +1,9 @@
 package com.soft.kent.bebluewallpaper.tabs;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
 import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.model.GetPage;
+import com.soft.kent.bebluewallpaper.model.MyHandler;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 import com.soft.kent.bebluewallpaper.model.Entity;
 
@@ -36,7 +39,17 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
     private RecyclerView rcTopMostViewed;
     private ImageAdapter imageAdapter;
     private ProgressDialog dialog;
-    private int index = 1;
+    public static int index = 1;
+
+    Activity activity;
+    MyHandler mh;
+    int column = 2;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,8 +60,15 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
 
     public void init(View v) {
         arrI = new ArrayList<>();
+
+        mh = new MyHandler(activity);
+        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            column = 2;
+        } else {
+            column = 4;
+        }
         rcTopMostViewed = (RecyclerView) v.findViewById(R.id.rcTopMostViewed);
-        rcTopMostViewed.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        rcTopMostViewed.setLayoutManager(new GridLayoutManager(getContext(), column));
 
         if (link.endsWith("/")) {
             link = new StringBuilder(link).append(index).toString();
@@ -90,7 +110,6 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
                 imageAdapter.notifyItemRemoved(arrI.size());
                 link = link.replace("/page/" + (index - 1), "/page/" + index);
                 new AsyncGetAllCategory().execute(link);
-
             }
         });
     }
@@ -98,7 +117,6 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
     @Override
     public void onResume() {
         super.onResume();
-//        index = 0;
         MyLog.e("onResume: " + index);
     }
 
@@ -113,21 +131,13 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
         protected void onPostExecute(Void result) {
             imageAdapter.notifyDataSetChanged();
             imageAdapter.setLoaded();
-//            if (index == 1) {
-//                dialog.dismiss();
-//            }
             index++;
         }
+    }
 
-        @Override
-        protected void onPreExecute() {
-//            if (index == 1) {
-//                dialog.show();
-//            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        rcTopMostViewed.setLayoutManager(new GridLayoutManager(getContext(), mh.getScreenOrientation(newConfig)));
     }
 }

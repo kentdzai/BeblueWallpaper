@@ -1,7 +1,9 @@
 package com.soft.kent.bebluewallpaper.tabs;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,11 +11,13 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.soft.kent.bebluewallpaper.DetailImageActivity;
 import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
@@ -21,18 +25,29 @@ import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
 import com.soft.kent.bebluewallpaper.R;
 import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
 import com.soft.kent.bebluewallpaper.model.GetPage;
+import com.soft.kent.bebluewallpaper.model.MyHandler;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
 import com.soft.kent.bebluewallpaper.model.Entity;
 
 import java.util.ArrayList;
 
 public class TabLatestWallpapers extends Fragment implements OnLoadMoreListener {
-    private static String link = "http://www.hdwallpapers.in/latest_wallpapers/page/";
+    public static String link = "http://www.hdwallpapers.in/latest_wallpapers/page/";
     public static ArrayList<ObjectImage> arrI;
     private RecyclerView rcLatestWallpaper;
     private ImageAdapter imageAdapter;
     private ProgressDialog dialog;
-    private int index = 1;
+    public static int index = 1;
+
+    Activity activity;
+    MyHandler mh;
+    int column = 2;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,8 +58,16 @@ public class TabLatestWallpapers extends Fragment implements OnLoadMoreListener 
 
     public void init(View v) {
         arrI = new ArrayList<>();
+
+        mh = new MyHandler(activity);
+        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            column = 2;
+        } else {
+            column = 4;
+        }
+
         rcLatestWallpaper = (RecyclerView) v.findViewById(R.id.rcLatestWallpaper);
-        rcLatestWallpaper.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        rcLatestWallpaper.setLayoutManager(new GridLayoutManager(getContext(), column));
 
         if (link.endsWith("/")) {
             link = new StringBuilder(link).append(index).toString();
@@ -79,6 +102,12 @@ public class TabLatestWallpapers extends Fragment implements OnLoadMoreListener 
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        rcLatestWallpaper.setLayoutManager(new GridLayoutManager(getContext(), mh.getScreenOrientation(newConfig)));
+    }
+
+    @Override
     public void onLoadMore() {
         new Handler().post(new Runnable() {
             @Override
@@ -94,7 +123,7 @@ public class TabLatestWallpapers extends Fragment implements OnLoadMoreListener 
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
-           GetPage.getAllWallpaper(params[0], arrI);
+            GetPage.getAllWallpaper(params[0], arrI);
             return null;
         }
 

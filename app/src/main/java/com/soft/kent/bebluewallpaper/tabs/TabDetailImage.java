@@ -36,23 +36,15 @@ import com.soft.kent.bebluewallpaper.model.GetDetailImage;
 import com.soft.kent.bebluewallpaper.model.ObjectDetailImage;
 import com.squareup.picasso.Picasso;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 @SuppressLint("ValidFragment")
 public class TabDetailImage extends Fragment implements View.OnClickListener {
-    private final String NAME_SPACE = "http://tempuri.org/";
-    private final String URL = "http://api.ixinh.net/services.asmx?op=getLinkImageLandscapeDetail";
-    private final String SOAP_ACTION = "http://tempuri.org/getLinkImageLandscapeDetail";
-    private final String METHOD_NAME = "getLinkImageLandscapeDetail";
-
     ArrayList<ObjectDetailImage> arrrObbjectDetailImage;
+
+    CoordinatorLayout LayoutDetailImage;
     ImageView ivDetail;
     FloatingActionButton fabFavorite;
     TextView tvTitleDetailImage;
@@ -60,21 +52,35 @@ public class TabDetailImage extends Fragment implements View.OnClickListener {
     Button btnDownloadImage;
     Button btnSetWallpaper;
     TextView tvAuthorName;
+
     String link;
     Handler handler;
-    CoordinatorLayout LayoutDetailImage;
-    Bitmap bmp;
+
+    Context context;
+
+    public Bitmap bmp;
     String filePath;
     SimpleDraweeView fDetail;
-    ObjectDetailImage oD;
+    public ObjectDetailImage oD;
 
-    public TabDetailImage(String link, int size) {
+    final String folderName = "BeblueWallPaper/";
+    final String formatName = ".jpg";
+    int position;
+
+    public TabDetailImage(String link, int position) {
         this.link = link;
+        this.position = position;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Fresco.initialize(this.getContext().getApplicationContext());
+        Fresco.initialize(context.getApplicationContext());
         View v = inflater.inflate(R.layout.activity_detail_image, container, false);
         init(v);
         handler = new Handler(Looper.getMainLooper());
@@ -91,43 +97,44 @@ public class TabDetailImage extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "Set wallpaper success !!!", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
-
         }
     }
 
     public Bitmap getPatch() {
         filePath = Environment.getExternalStorageDirectory()
-                .getAbsolutePath() + File.separator + "BeblueWallPaper/" + oD.wallpaperName + ".jpg";
+                .getAbsolutePath() + File.separator + folderName + oD.wallpaperName + formatName;
         bmp = BitmapFactory.decodeFile(filePath);
         return bmp;
     }
 
-    BroadcastReceiver onComplete = new BroadcastReceiver() {
+    public Uri getFile(String fileName) {
+        return Uri.parse(Environment.getExternalStorageDirectory()
+                .getAbsolutePath() + File.separator + folderName + fileName + formatName);
+    }
+
+    public BroadcastReceiver onComplete = new BroadcastReceiver() {
         public void onReceive(Context ctxt, Intent intent) {
             Toast.makeText(getActivity(), "Download complete !!!", Toast.LENGTH_SHORT).show();
             getPatch();
             setWallPaper(bmp);
-            getContext().unregisterReceiver(onComplete);
+            context.unregisterReceiver(onComplete);
         }
     };
 
     public void downloadFile(String uRl) {
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-
         if (!mediaStorageDir.exists()) {
             mediaStorageDir.mkdirs();
         }
-        DownloadManager mgr = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        Uri downloadUri = Uri.parse(uRl);
+        DownloadManager mgr = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(
-                downloadUri);
+                Uri.parse(uRl));
         request.setAllowedNetworkTypes(
                 DownloadManager.Request.NETWORK_WIFI
                         | DownloadManager.Request.NETWORK_MOBILE)
                 .setAllowedOverRoaming(true).setTitle(oD.wallpaperName)
                 .setDescription("Downloading ...")
                 .setDestinationInExternalPublicDir("/BeblueWallPaper", oD.wallpaperName + ".jpg");
-
         mgr.enqueue(request);
     }
 
@@ -155,21 +162,29 @@ public class TabDetailImage extends Fragment implements View.OnClickListener {
             case R.id.btnSetWallpaper:
                 getPatch();
                 if (bmp == null) {
-                    getContext().registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                    context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                     downloadFile(oD.linkDownload);
                 } else {
                     setWallPaper(bmp);
                 }
                 break;
             case R.id.btnDownloadImage:
-                downloadFile(oD.linkDownload);
+                if (getPatch() == null)
+                    downloadFile(oD.linkDownload);
+                else
+                    myToast("Download rồi mà!");
                 break;
         }
+    }
+
+    private void myToast(String s) {
+        Toast.makeText(TabDetailImage.this.getContext(), s, Toast.LENGTH_LONG).show();
     }
 
     private class GetAllDetailImageTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
+            MyLog.e("DETAIL IMAGE: " + position);
             oD = GetDetailImage.getDetailsImage(params[0]);
             return null;
         }
@@ -180,17 +195,17 @@ public class TabDetailImage extends Fragment implements View.OnClickListener {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (getContext() != null) {
-//                            Glide.with(getContext()).load(ImageDisplay)
+                        if (context != null) {
+//                            Glide.with(context).load(ImageDisplay)
 //                            .thumbnail(0.1f)
 //                            .crossFade()
 //                            .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                            .into(ivDetail);
 
-//                            Picasso.with(getContext()).load(oD.linkDisplay).into(ivDetail);
-//                            Glide.with(getContext()).load(oD.linkDisplay).into(ivDetail);
+//                            Picasso.with(context).load(oD.linkDisplay).into(ivDetail);
+//                            Glide.with(context).load(oD.linkDisplay).into(ivDetail);
 //                            fDetail.setImageURI(Uri.parse(ImageDisplay));
-                            Ion.with(getContext()).load(oD.linkDisplay).intoImageView(ivDetail);
+                            Ion.with(context).load(oD.linkDisplay).intoImageView(ivDetail);
                         }
                         tvTitleDetailImage.setText(oD.wallpaperName);
                         tvCountViewDetailImage.setText(String.valueOf(oD.downloadCount));

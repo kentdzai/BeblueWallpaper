@@ -1,7 +1,8 @@
 package com.soft.kent.bebluewallpaper;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,20 +11,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
-import com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener;
-import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
-import com.soft.kent.bebluewallpaper.model.GetPage;
-import com.soft.kent.bebluewallpaper.model.MyHandler;
+import com.soft.kent.bebluewallpaper.controller.MyLog;
+import com.soft.kent.bebluewallpaper.view.adapter.PageAdapter;
+import com.soft.kent.bebluewallpaper.controller.MySpanSizeLookup;
+import com.soft.kent.bebluewallpaper.controller.listener.OnLoadMoreListener;
+import com.soft.kent.bebluewallpaper.controller.GetPage;
+import com.soft.kent.bebluewallpaper.controller.MyHandler;
+import com.soft.kent.bebluewallpaper.model.DatabaseWallpaper;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
-import com.soft.kent.bebluewallpaper.model.Entity;
 import com.squareup.picasso.Picasso;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class DetailCategoriesActivity extends AppCompatActivity implements OnLoadMoreListener {
@@ -37,23 +42,24 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
 
     public static ArrayList<ObjectImage> arrI;
     private RecyclerView rcDetailCategories;
-    private ImageAdapter imageAdapter;
+    public static PageAdapter pageAdapter;
     public static int index = 1;
-
-    Activity activity;
+    DatabaseWallpaper db;
     MyHandler mh;
     int column = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_datail_categories);
+        setContentView(R.layout.activity_detail_categories);
         init();
     }
 
+    GridLayoutManager gridLayoutManager;
+
     public void init() {
         arrI = new ArrayList<>();
-
+        db = new DatabaseWallpaper(this);
         mh = new MyHandler(DetailCategoriesActivity.this);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
             column = 2;
@@ -63,11 +69,13 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
         toolbar = (Toolbar) findViewById(R.id.toolbarCategories);
         tvTitleCategories = (TextView) findViewById(R.id.tvTitleCategories);
         rcDetailCategories = (RecyclerView) findViewById(R.id.rcDetailCategories);
-        rcDetailCategories.setLayoutManager(new GridLayoutManager(this, column));
-
+        gridLayoutManager = new GridLayoutManager(this, column);
+        rcDetailCategories.setLayoutManager(gridLayoutManager);
+        gridLayoutManager.setSpanSizeLookup(new MySpanSizeLookup(arrI, 1, 2));
         Bundle bundle = getIntent().getBundleExtra("data");
         titleCategories = bundle.getString("titleCategories");
         linkCategories = bundle.getString("linkCategories") + index;
+        MyLog.e("TITLE REI: " + titleCategories);
         MyLog.e("CAT REI: " + linkCategories);
         avatar = bundle.getInt("imgAvatar");
 
@@ -85,24 +93,31 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
 
         new AsyncGetAllCategory().execute(linkCategories);
 
-        imageAdapter = new ImageAdapter(rcDetailCategories, arrI);
-        rcDetailCategories.setAdapter(imageAdapter);
-        imageAdapter.setOnLoadMoreListener(this);
+        pageAdapter = new PageAdapter(rcDetailCategories, arrI, linkCategories, GetPage.CATEGORIRES);
+        rcDetailCategories.setAdapter(pageAdapter);
+        pageAdapter.setOnLoadMoreListener(this);
 
-        rcDetailCategories.addOnItemTouchListener(
-                new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("linkPage", linkCategories);
-                        bundle.putInt("position", position);
-                        bundle.putString(Entity.KEY_DETAIL, Entity.CATEGORIRES);
-                        Intent intent = new Intent(getBaseContext(), DetailImageActivity.class);
-                        intent.putExtra("data", bundle);
-                        startActivity(intent);
-                    }
-                })
-        );
+    }
+
+    public void getKeyHash() {
+        PackageInfo info;
+        try {
+            info = getPackageManager().getPackageInfo("com.soft.kent.bebluewallpaper", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String something = new String(Base64.encode(md.digest(), 0));
+                //String something = new String(Base64.encodeBytes(md.digest()));
+                Log.e("hash key", something);
+            }
+        } catch (PackageManager.NameNotFoundException e1) {
+            Log.e("name not found", e1.toString());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("no such an algorithm", e.toString());
+        } catch (Exception e) {
+            Log.e("exception", e.toString());
+        }
     }
 
     @Override
@@ -110,57 +125,34 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                imageAdapter.notifyItemRemoved(arrI.size());
+                pageAdapter.notifyItemRemoved(arrI.size());
                 linkCategories = linkCategories.replace("/page/" + (index - 1), "/page/" + index);
                 new AsyncGetAllCategory().execute(linkCategories);
             }
         });
-
-        rcDetailCategories.addOnItemTouchListener(
-                new RecyclerItemClickListener(getBaseContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-//                        Intent intent = new Intent(getBaseContext(), DetailImageActivity.class);
-//                        intent.putExtra("linkDetail", arrI.get(position).getLinkDetail());
-//                        startActivity(intent);
-
-                    }
-                })
-        );
     }
-
 
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
-            GetPage.getAllWallpaper(params[0], arrI);
+            GetPage.getAllWallpaper(params[0], arrI, db);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            imageAdapter.notifyDataSetChanged();
-            imageAdapter.setLoaded();
-//            if (index == 1) {
-//                dialog.dismiss();
-//            }
+            pageAdapter.notifyDataSetChanged();
+            pageAdapter.setLoaded();
             index++;
             if (arrI != null) {
-                Picasso.with(getApplicationContext())
-                        .load(arrI.get(arrI.size() - 1).getImageSmall())
-                        .into(ivAvatar);
+                if (arrI.size() > 0) {
+                    Picasso.with(getApplicationContext())
+                            .load(arrI.get(arrI.size() - 2).imageSmall)
+                            .into(ivAvatar);
+
+                }
+
             }
-        }
-
-        @Override
-        protected void onPreExecute() {
-//            if (index == 1) {
-//                dialog.show();
-//            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
         }
     }
 
@@ -177,6 +169,7 @@ public class DetailCategoriesActivity extends AppCompatActivity implements OnLoa
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        rcDetailCategories.setLayoutManager(new GridLayoutManager(DetailCategoriesActivity.this, mh.getScreenOrientation(newConfig)));
+        rcDetailCategories.setLayoutManager(gridLayoutManager);
+        gridLayoutManager.setSpanSizeLookup(new MySpanSizeLookup(arrI, 1, mh.getScreenOrientation(newConfig)));
     }
 }

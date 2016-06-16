@@ -7,13 +7,16 @@ public class ObjectDetailImage {
     public String wallpaperName;
     public String linkDisplay;
     public String linkDownload;
+    public String imageSmall;
     public int downloadCount;
     public String authorName;
 
-    public ObjectDetailImage(String wallpaperName, String linkDisplay, String linkDownload, int downloadCount, String authorName) {
+
+    public ObjectDetailImage(String wallpaperName, String linkDisplay, String linkDownload, String imageSmall, int downloadCount, String authorName) {
         this.wallpaperName = wallpaperName;
         this.linkDisplay = linkDisplay;
         this.linkDownload = linkDownload;
+        this.imageSmall = imageSmall;
         this.downloadCount = downloadCount;
         this.authorName = authorName;
     }

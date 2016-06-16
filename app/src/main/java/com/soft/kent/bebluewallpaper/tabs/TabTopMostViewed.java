@@ -2,7 +2,6 @@ package com.soft.kent.bebluewallpaper.tabs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -17,30 +16,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import com.soft.kent.bebluewallpaper.DetailImageActivity;
-import com.soft.kent.bebluewallpaper.MyLog;
+import com.soft.kent.bebluewallpaper.controller.MyLog;
 import com.soft.kent.bebluewallpaper.R;
-import com.soft.kent.bebluewallpaper.adapter.ImageAdapter;
-import com.soft.kent.bebluewallpaper.listener.RecyclerItemClickListener;
-import com.soft.kent.bebluewallpaper.model.GetPage;
-import com.soft.kent.bebluewallpaper.model.MyHandler;
+import com.soft.kent.bebluewallpaper.view.adapter.PageAdapter;
+import com.soft.kent.bebluewallpaper.controller.MySpanSizeLookup;
+import com.soft.kent.bebluewallpaper.controller.GetPage;
+import com.soft.kent.bebluewallpaper.controller.MyHandler;
+import com.soft.kent.bebluewallpaper.model.DatabaseWallpaper;
 import com.soft.kent.bebluewallpaper.model.ObjectImage;
-import com.soft.kent.bebluewallpaper.model.Entity;
 
 import java.util.ArrayList;
 
 /**
  * Created by kentd on 18/05/2016.
  */
-public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewallpaper.listener.OnLoadMoreListener {
-    private static String link = "http://www.hdwallpapers.in/top_view_wallpapers/page/";
+public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewallpaper.controller.listener.OnLoadMoreListener {
+    private String link = "http://www.hdwallpapers.in/top_view_wallpapers/page/";
 
     public static ArrayList<ObjectImage> arrI;
     private RecyclerView rcTopMostViewed;
-    private ImageAdapter imageAdapter;
+    public static PageAdapter pageAdapter;
     private ProgressDialog dialog;
     public static int index = 1;
-
+    DatabaseWallpaper db;
     Activity activity;
     MyHandler mh;
     int column = 2;
@@ -60,15 +58,17 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
 
     public void init(View v) {
         arrI = new ArrayList<>();
-
+        db = new DatabaseWallpaper(activity);
         mh = new MyHandler(activity);
         if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             column = 2;
         } else {
             column = 4;
         }
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), column);
         rcTopMostViewed = (RecyclerView) v.findViewById(R.id.rcTopMostViewed);
-        rcTopMostViewed.setLayoutManager(new GridLayoutManager(getContext(), column));
+        rcTopMostViewed.setLayoutManager(gridLayoutManager);
+        gridLayoutManager.setSpanSizeLookup(new MySpanSizeLookup(arrI, 1, 2));
 
         if (link.endsWith("/")) {
             link = new StringBuilder(link).append(index).toString();
@@ -83,23 +83,9 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
 
         new AsyncGetAllCategory().execute(link);
 
-        imageAdapter = new ImageAdapter(rcTopMostViewed, arrI);
-        rcTopMostViewed.setAdapter(imageAdapter);
-        imageAdapter.setOnLoadMoreListener(this);
-        rcTopMostViewed.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("linkPage", link);
-                        bundle.putInt("position", position);
-                        bundle.putString(Entity.KEY_DETAIL, Entity.TOP_MOST_VIEWED);
-                        Intent intent = new Intent(getActivity(), DetailImageActivity.class);
-                        intent.putExtra("data", bundle);
-                        startActivity(intent);
-                    }
-                })
-        );
+        pageAdapter = new PageAdapter(rcTopMostViewed, arrI, link, GetPage.TOP_MOST_VIEWED);
+        rcTopMostViewed.setAdapter(pageAdapter);
+        pageAdapter.setOnLoadMoreListener(this);
     }
 
     @Override
@@ -107,30 +93,24 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                imageAdapter.notifyItemRemoved(arrI.size());
+                pageAdapter.notifyItemRemoved(arrI.size());
                 link = link.replace("/page/" + (index - 1), "/page/" + index);
                 new AsyncGetAllCategory().execute(link);
             }
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        MyLog.e("onResume: " + index);
-    }
-
     private class AsyncGetAllCategory extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
-            GetPage.getAllWallpaper(params[0], arrI);
+            GetPage.getAllWallpaper(params[0], arrI, db);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            imageAdapter.notifyDataSetChanged();
-            imageAdapter.setLoaded();
+            pageAdapter.notifyDataSetChanged();
+            pageAdapter.setLoaded();
             index++;
         }
     }
@@ -139,5 +119,18 @@ public class TabTopMostViewed extends Fragment implements com.soft.kent.bebluewa
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         rcTopMostViewed.setLayoutManager(new GridLayoutManager(getContext(), mh.getScreenOrientation(newConfig)));
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MyLog.e("TabMost: resume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MyLog.e("TabMost: pause");
     }
 }

@@ -1,12 +1,10 @@
 package com.soft.kent.bebluewallpaper;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,12 +15,10 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.soft.kent.bebluewallpaper.adapter.AdapterViewPager;
+import com.soft.kent.bebluewallpaper.view.adapter.AdapterViewPager;
 import com.soft.kent.bebluewallpaper.tabs.TabCategories;
 import com.soft.kent.bebluewallpaper.tabs.TabLatestWallpapers;
 import com.soft.kent.bebluewallpaper.tabs.TabTopMostViewed;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -39,8 +35,8 @@ public class MainActivity extends AppCompatActivity
 
     private void init() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar = (Toolbar) findViewById(R.id.mainToolbar);
+        toolbar.setTitle("Home");
 
         setSupportActionBar(toolbar);
 
@@ -48,7 +44,7 @@ public class MainActivity extends AppCompatActivity
         tabs = (TabLayout) findViewById(R.id.tabs);
         setViewPager(viewPager);
         tabs.setupWithViewPager(viewPager);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -57,16 +53,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public int getScreenOrientation()
-    {
+    public int getScreenOrientation() {
         Display getOrient = getWindowManager().getDefaultDisplay();
         int orientation = Configuration.ORIENTATION_UNDEFINED;
-        if(getOrient.getWidth()==getOrient.getHeight()){
+        if (getOrient.getWidth() == getOrient.getHeight()) {
             orientation = Configuration.ORIENTATION_SQUARE;
-        } else{
-            if(getOrient.getWidth() < getOrient.getHeight()){
+        } else {
+            if (getOrient.getWidth() < getOrient.getHeight()) {
                 orientation = Configuration.ORIENTATION_PORTRAIT;
-            }else {
+            } else {
                 orientation = Configuration.ORIENTATION_LANDSCAPE;
             }
         }
@@ -100,7 +95,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -133,7 +128,8 @@ public class MainActivity extends AppCompatActivity
 
                 break;
             case R.id.nav_favorite:
-
+                startActivity(new Intent(MainActivity.this, FavoriteActivity.class));
+                finish();
                 break;
             case R.id.nav_history:
 
@@ -142,7 +138,7 @@ public class MainActivity extends AppCompatActivity
 
                 break;
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

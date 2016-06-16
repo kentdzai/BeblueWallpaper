@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/LayoutDetailImage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,24 +20,27 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/ivDetail"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/cover"
-                    android:visibility="visible" />
+                    android:layout_height="wrap_content">
 
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/fDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
+                    <ImageView
+                        android:id="@+id/ivDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:visibility="visible" />
 
+                    <ProgressBar
+                        android:id="@+id/pLoadDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
+                </FrameLayout>
                 <include layout="@layout/content_detail_image" />
             </LinearLayout>
-
         </ScrollView>
 
         <android.support.v7.widget.Toolbar
@@ -46,15 +48,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent" />
+
+        <RelativeLayout
+            android:id="@+id/RBannerDetail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom" />
     </FrameLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabFavorite"
+    <CheckBox
+        android:id="@+id/cbFavorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:src="@mipmap/ic_favorite"
+        android:button="@drawable/custom_cb_favorite"
+        android:gravity="center"
+        android:visibility="visible"
         app:layout_anchor="@id/ivDetail"
         app:layout_anchorGravity="bottom|right|end" />
-
 </android.support.design.widget.CoordinatorLayout>

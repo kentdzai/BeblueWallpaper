@@ -102,12 +102,5 @@
                 android:textStyle="normal" />
 
         </LinearLayout>
-
-        <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/rcRelatesDetailImage"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="10dp" />-->
     </LinearLayout>
-
 </android.support.design.widget.CoordinatorLayout>

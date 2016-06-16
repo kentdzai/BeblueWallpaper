@@ -1,43 +1,25 @@
 package com.soft.kent.bebluewallpaper.model;
 
-/**
- * Created by QuyetChu on 5/18/16.
- */
-public class ObjectImage {
+import java.io.Serializable;
 
-    private String imageSmall;
-    private String linkDetail;
+public class ObjectImage implements Serializable {
 
-    public ObjectImage(String imageSmall, String linkDetail) {
+    public String imageSmall;
+    public String linkDetail;
+    public boolean favorite;
+    public boolean advertisement;
+
+    public ObjectImage(String imageSmall, String linkDetai, boolean favorite) {
         this.imageSmall = imageSmall;
-        this.linkDetail = linkDetail;
+        this.linkDetail = linkDetai;
+        this.favorite = favorite;
     }
 
-    public void setImageSmall(String imageSmall) {
-
+    public ObjectImage(String imageSmall, String linkDetai, boolean favorite, boolean advertisement) {
         this.imageSmall = imageSmall;
+        this.linkDetail = linkDetai;
+        this.favorite = favorite;
+        this.advertisement = advertisement;
     }
-
-    public void setLinkDetail(String linkDetail) {
-        this.linkDetail = linkDetail;
-    }
-
-    public String getLinkDetail() {
-        return linkDetail;
-    }
-
-    public String getImageSmall() {
-        return imageSmall;
-    }
-
-    @Override
-    public String toString() {
-        return "Anh{" +
-                "imageSmall='" + imageSmall + '\'' +
-                ", linkDetail='" + linkDetail + '\'' +
-                '}';
-    }
-
-
 }
 
